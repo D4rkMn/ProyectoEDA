@@ -1,7 +1,7 @@
 # Algoritmos de Clustering y Diversidad
 
 ## Descripción del Proyecto
-Este proyecto implementa una suite de algoritmos de clustering y diversidad, incluyendo DFM (Diversity First Method), Monkley, BRID, Swap y MMR. El sistema está diseñado para manejar diversos tipos de datos a través del uso de templates en C++, permitiendo una gran flexibilidad en su aplicación.
+Este proyecto implementa una suite de algoritmos de clustering y diversidad, incluyendo DFM (Diversity Features Model), Motley, BRID, Swap y MMR. El sistema está diseñado para manejar diversos tipos de datos a través del uso de templates en C++, permitiendo una gran flexibilidad en su aplicación.
 
 ## Integrantes del Equipo
 - Melisa Rivera
@@ -9,6 +9,7 @@ Este proyecto implementa una suite de algoritmos de clustering y diversidad, inc
 - Alejandro Oré
 - Alexandra
 
+# todo: cambiar esta parte del readme (si aceptan mi pr claro)
 ## Estructura del Proyecto
 ```
 .
@@ -19,7 +20,7 @@ Este proyecto implementa una suite de algoritmos de clustering y diversidad, inc
 │   ├── Cluster.h
 │   ├── Algorithm.h
 │   ├── DFM.h
-│   ├── Monkley.h
+│   ├── Motley.h
 │   ├── BRID.h
 │   ├── Swap.h
 │   └── MMR.h
@@ -68,7 +69,7 @@ Clase base abstracta para todos los algoritmos.
 
 ## Algoritmos Implementados
 
-### DFM (Diversity First Method)
+### DFM (Diversity Features Model)
 - Inicialización de clusters
 - Métricas de evaluación:
   - Dunn*
@@ -77,7 +78,7 @@ Clase base abstracta para todos los algoritmos.
   - Sigma (similitud/diversidad)
   - U (similitud/diversidad)
 
-### Monkley
+### Motley
 - Algoritmo basado en medoides
 - Balance entre similitud y diversidad
 
@@ -99,8 +100,8 @@ Clase base abstracta para todos los algoritmos.
 
 ## Uso Básico
 ```cpp
-#include "DataSet.h"
-#include "DFM.h"
+#include "DataStructures/DataSet/DataSet.h"
+#include "Algorithms/DFM/DFM.h"
 
 // Crear conjunto de datos
 DataSet<YourDataType> dataset;

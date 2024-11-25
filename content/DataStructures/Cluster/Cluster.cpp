@@ -1,4 +1,4 @@
-#include "Cluster.h"
+#include "DataStructures/Cluster/Cluster.h"
 
 template<typename T>
 T& Cluster<T>::getData(int i) {

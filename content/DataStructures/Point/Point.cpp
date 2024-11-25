@@ -1,4 +1,4 @@
-#include "Point.h"
+#include "DataStructures/Point/Point.h"
 #include <iostream>
 
 Point::Point(int dim) : coordinates(dim, 0.0) {}
