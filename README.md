@@ -27,12 +27,7 @@ Este proyecto implementa una suite de algoritmos de clustering y diversidad, inc
 │   ├── Data.cpp
 │   ├── DataSet.cpp
 │   ├── Cluster.cpp
-│   ├── Algorithm.cpp
-│   ├── DFM.cpp
-│   ├── Monkley.cpp
-│   ├── BRID.cpp
-│   ├── Swap.cpp
-│   └── MMR.cpp
+│   └── Algorithm.cpp
 ├── README.md
 └── .gitignore
 ```
