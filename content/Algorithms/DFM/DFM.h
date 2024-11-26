@@ -27,4 +27,6 @@ public:
     float execute_u_div();
 };
 
+#include "Algorithms/DFM/DFM.tpp"
+
 #endif

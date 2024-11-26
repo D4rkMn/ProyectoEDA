@@ -2,6 +2,7 @@
 #define DATASET_H
 
 #include <vector>
+#include <cstddef>
 
 template<typename T>
 class DataSet {

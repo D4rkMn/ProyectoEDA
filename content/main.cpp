@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#include "Algorithms/BRID/BRID.h"
+#include "Algorithms/DFM/DFM.h"
 
 // Main de pruebas. puede ser descartado
 int main() {
@@ -10,7 +10,7 @@ int main() {
         return static_cast<float>(a + b);
     };
 
-    BRID<int> xd(fn, fn);
+    DFM<int> xd(fn, fn);
 
     printf("hello world\n");
     return 0;
