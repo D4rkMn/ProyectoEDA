@@ -10,15 +10,19 @@
 template<typename T>
 class DFM {
 private:
-    std::vector<float> answer;
+    vector<float> answer;
     std::function<float(const Data<T>&, const Data<T>&)> distance_sim;
-    std::function<float(const Data<T>&, const Data<T>&)> distance_div; 
+    std::function<float(const Data<T>&, const Data<T>&)> distance_div;
+    std::vector<Data<T>> R;
+    DataSet<T> O;
+    std::vector<Cluster<T>> C;
 
 public:
     DFM(std::function<float(const Data<T>&, const Data<T>&)> sim,
         std::function<float(const Data<T>&, const Data<T>&)> div){
         distance_sim = sim;
         distance_div = div;
+        answer.reserve(7);
         }
 
     void initialize(std::vector<Data<T>>& R, DataSet<T>& O, 

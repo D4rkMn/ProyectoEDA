@@ -10,7 +10,7 @@ private:
 
 public:
     MMR(std::function<float(const Data<T>&, const Data<T>&)> sim,
-        std::function<float(const Data<T>&, const Data<T>&)> div
+        std::function<float(const Data<T>&, const Data<T>&)> div,
         float lambda = 0.5f)
         : Algorithm<T>(sim, div), lambda(lambda) {}
 
