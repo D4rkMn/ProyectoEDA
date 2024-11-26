@@ -6,11 +6,11 @@
 template<typename T>
 class BRID : public Algorithm<T> {
 public:
-    BRID(std::function<float(const T&, const T&)> sim,
-         std::function<float(const T&, const T&)> div)
+    BRID(std::function<float(const Data<T>&, const Data<T>&)> sim,
+        std::function<float(const Data<T>&, const Data<T>&)> div)
         : Algorithm<T>(sim, div) {}
 
-    std::vector<T> execute(DataSet<T>& O, std::vector<Cluster<T>>& C) override;
+    std::vector<Data<T>> execute(DataSet<T>& O, std::vector<Cluster<T>>& C, Data<T> q, int k) override;
 };
 
 #include "Algorithms/BRID/BRID.tpp"

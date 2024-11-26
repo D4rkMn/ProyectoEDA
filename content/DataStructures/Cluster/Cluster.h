@@ -2,21 +2,25 @@
 #define CLUSTER_H
 
 #include <vector>
+#include <cstddef>
+#include "DataStructures/Data/Data.h"
 
 template<typename T>
 class Cluster {
 private:
-    std::vector<T> contenido;
-    T medoid;
+    std::vector<Data<T>> content;
+    Data<T> medoid;
 
 public:
-    T& getData(int i);
-    const T& getData(int i) const;
-    std::vector<T>& getAllData();
-    const std::vector<T>& getAllData() const;
-    void setMedoid(const T& newMedoid);
-    T& getMedoid();
-    const T& getMedoid() const;
+    Data<T>& getData(int i);
+    const Data<T>& getData(int i) const;
+    std::vector<Data<T>>& getAllData();
+    const std::vector<Data<T>>& getAllData() const;
+    void setMedoid(const Data<T>& newMedoid);
+    Data<T>& getMedoid();
+    const Data<T>& getMedoid() const;
+    void addData(const Data<T>& data);
+    size_t size() const;
 };
 
 #endif

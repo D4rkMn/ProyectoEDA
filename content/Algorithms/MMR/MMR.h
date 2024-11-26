@@ -9,12 +9,12 @@ private:
     float lambda;
 
 public:
-    MMR(std::function<float(const T&, const T&)> sim,
-        std::function<float(const T&, const T&)> div,
+    MMR(std::function<float(const Data<T>&, const Data<T>&)> sim,
+        std::function<float(const Data<T>&, const Data<T>&)> div
         float lambda = 0.5f)
         : Algorithm<T>(sim, div), lambda(lambda) {}
 
-    std::vector<T> execute(DataSet<T>& O, std::vector<Cluster<T>>& C) override;
+    std::vector<Data<T>> execute(DataSet<T>& O, std::vector<Cluster<T>>& C, Data<T> q, int k) override;
 };
 
 #include "Algorithms/MMR/MMR.tpp"

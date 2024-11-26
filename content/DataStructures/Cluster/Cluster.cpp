@@ -1,39 +1,48 @@
+
 #include "DataStructures/Cluster/Cluster.h"
 
+
 template<typename T>
-T& Cluster<T>::getData(int i) {
-    // TODO: Implementar validación de índices
-    return contenido[i];
+Data<T>& Cluster<T>::getData(int i) {
+    return content[i];
 }
 
 template<typename T>
-const T& Cluster<T>::getData(int i) const {
-    // TODO: Implementar validación de índices
-    return contenido[i];
+const Data<T>& Cluster<T>::getData(int i) const {
+    return content[i];
 }
 
 template<typename T>
-std::vector<T>& Cluster<T>::getAllData() {
-    return contenido;
+std::vector<Data<T>>& Cluster<T>::getAllData() {
+    return content;
 }
 
 template<typename T>
-const std::vector<T>& Cluster<T>::getAllData() const {
-    return contenido;
+const std::vector<Data<T>>& Cluster<T>::getAllData() const {
+    return content;
 }
 
 template<typename T>
-void Cluster<T>::setMedoid(const T& newMedoid) {
-    // TODO: Implementar la actualización del medoide
+void Cluster<T>::setMedoid(const Data<T>& newMedoid) {
     medoid = newMedoid;
 }
 
 template<typename T>
-T& Cluster<T>::getMedoid() {
+Data<T>& Cluster<T>::getMedoid() {
     return medoid;
 }
 
 template<typename T>
-const T& Cluster<T>::getMedoid() const {
+const Data<T>& Cluster<T>::getMedoid() const {
     return medoid;
+}
+
+template<typename T>
+void Cluster<T>::addData(const Data<T>& data) {
+    content.push_back(data);
+}
+
+template<typename T>
+size_t Cluster<T>::size() const {
+    return content.size();
 }
