@@ -1,7 +1,7 @@
 #ifndef MMR_H
 #define MMR_H
 
-#include "Algorithm.h"
+#include "Algorithms/Algorithm.h"
 
 template<typename T>
 class MMR : public Algorithm<T> {
@@ -14,10 +14,9 @@ public:
         float lambda = 0.5f)
         : Algorithm<T>(sim, div), lambda(lambda) {}
 
-    std::vector<T> execute(DataSet<T>& O, std::vector<Cluster<T>>& C) override {
-        // TODO: Implementar el algoritmo MMR
-        return std::vector<T>();
-    }
+    std::vector<T> execute(DataSet<T>& O, std::vector<Cluster<T>>& C) override;
 };
+
+#include "Algorithms/MMR/MMR.tpp"
 
 #endif

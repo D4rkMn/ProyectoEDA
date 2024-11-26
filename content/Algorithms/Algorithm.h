@@ -1,8 +1,8 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
-#include "DataSet.h"
-#include "Cluster.h"
+#include "DataStructures/DataSet/DataSet.h"
+#include "DataStructures/Cluster/Cluster.h"
 #include <vector>
 #include <functional>
 

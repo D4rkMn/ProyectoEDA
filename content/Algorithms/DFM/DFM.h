@@ -1,7 +1,7 @@
 #ifndef DFM_H
 #define DFM_H
 
-#include "Algorithm.h"
+#include "Algorithms/Algorithm.h"
 #include <vector>
 
 template<typename T>

@@ -1,7 +1,7 @@
 #ifndef BRID_H
 #define BRID_H
 
-#include "Algorithm.h"
+#include "Algorithms/Algorithm.h"
 
 template<typename T>
 class BRID : public Algorithm<T> {
@@ -10,10 +10,9 @@ public:
          std::function<float(const T&, const T&)> div)
         : Algorithm<T>(sim, div) {}
 
-    std::vector<T> execute(DataSet<T>& O, std::vector<Cluster<T>>& C) override {
-        // TODO: Implementar el algoritmo BRID
-        return std::vector<T>();
-    }
+    std::vector<T> execute(DataSet<T>& O, std::vector<Cluster<T>>& C) override;
 };
+
+#include "Algorithms/BRID/BRID.tpp"
 
 #endif
