@@ -16,7 +16,7 @@ CXXFLAGS = -std=c++17 -Wall -g -O0 -I./$(SRCDIR)
 ############## Do not change anything from here downwards! #############
 SRC = $(shell find $(SRCDIR) -name '*$(EXT)') # Find all .cpp files recursively
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)  # Replace .cpp with .o
-DEP = $(SRC:$(SRCDIR)/%$(EXT)=$(DEPDIR)/ %.d)  # Replace .cpp with .d
+DEP = $(SRC:$(SRCDIR)/%$(EXT)=$(DEPDIR)/%.d)  # Replace .cpp with .d
 
 # UNIX-based OS variables & settings
 RM = rm -f        # Use -f to avoid errors when file does not exist

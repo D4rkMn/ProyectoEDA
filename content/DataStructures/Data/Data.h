@@ -10,12 +10,40 @@ private:
     Point embedding;
 
 public:
-    Data(const T& content);
-    T& getContent();
-    const T& getContent() const;
-    void setContent(const T& content);
-    Point& getEmbedding();
-    const Point& getEmbedding() const;
+    // Constructor
+    Data() = default;
+    Data(const T& content) : content(content) {}
+
+    // Métodos para obtener y modificar el contenido
+    T& getContent() { 
+        return content; 
+    }
+    
+    const T& getContent() const { 
+        return content; 
+    }
+    
+    void setContent(const T& newContent) { 
+        content = newContent; 
+    }
+
+    // Métodos para el embedding
+    Point& getEmbedding() { 
+        return embedding; 
+    }
+    
+    const Point& getEmbedding() const { 
+        return embedding; 
+    }
+
+    // Método getJA - versiones const y no-const
+    T getJA() { 
+        return 2; 
+    }
+    
+    T getJA() const { 
+        return 2; 
+    }
 };
 
-#endif
+#endif // DATA_H

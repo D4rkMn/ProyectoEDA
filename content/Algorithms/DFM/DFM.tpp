@@ -1,21 +1,16 @@
-#include "Algorithms/DFM/DFM.h"
 #include <cmath>
 #include <limits>
 
 template<typename T>
-DFM<T>::DFM(std::function<float(const T&, const T&)> sim,
-            std::function<float(const T&, const T&)> div) 
-    : Algorithm<T>(sim, div) {}
-
-template<typename T>
-void DFM<T>::initialize(std::vector<T>& R, DataSet<T>& O, std::vector<Cluster<T>>& C) {
+void DFM<T>::initialize(std::vector<Data<T>>& R, DataSet<T>& O, 
+                        std::vector<Cluster<T>>& C) {
     // TODO: Implementar la inicialización del algoritmo
 }
 
 template<typename T>
-std::vector<T> DFM<T>::execute(DataSet<T>& O, std::vector<Cluster<T>>& C) {
+std::vector<float> DFM<T>::execute() {
     // TODO: Implementar el algoritmo principal DFM
-    return std::vector<T>();
+    return std::vector<float>();
 }
 
 template<typename T>
