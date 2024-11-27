@@ -10,7 +10,7 @@
 template<typename T>
 class DFM {
 private:
-    vector<float> answer;
+    std::vector<float> answer;
     std::function<float(const Data<T>&, const Data<T>&)> distance_sim;
     std::function<float(const Data<T>&, const Data<T>&)> distance_div;
     std::vector<Data<T>> R;
@@ -19,7 +19,7 @@ private:
 
 public:
     DFM(std::function<float(const Data<T>&, const Data<T>&)> sim,
-        std::function<float(const Data<T>&, const Data<T>&)> div){
+        std::function<float(const Data<T>&, const Data<T>&)> div) {
         distance_sim = sim;
         distance_div = div;
         answer.reserve(7);

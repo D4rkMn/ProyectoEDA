@@ -5,7 +5,7 @@
 
 // Swap con MMR
 template<typename T>
-float Swap<T>::objective_function(const T& o_i, const T& o_q, std::vector<T>& R) const {
+float Swap<T>::objective_function(Data<T>& o_i, Data<T>& o_q, std::vector<Data<T>>& R) const {
     float result = (1 - lambda) * distance_sim(o_i, o_q);
     float sum = 0;
     for (const auto& o_j: R) {
@@ -16,8 +16,8 @@ float Swap<T>::objective_function(const T& o_i, const T& o_q, std::vector<T>& R)
 }
 
 template<typename T>
-std::vector<T> Swap<T>::kNN(size_t k, const T& o_q, DataSet<T>& O) const {
-    std::priority_queue< std::pair<float, T*> > R;
+std::vector<Data<T>> Swap<T>::kNN(size_t k, Data<T>& o_q, DataSet<T>& O) const {
+    std::priority_queue< std::pair<float, Data<T>*> > R;
     float inf = std::numeric_limits<float>::max();
     for (size_t i = 0; i < k; i++) {
         R.push({inf, nullptr});
@@ -30,7 +30,7 @@ std::vector<T> Swap<T>::kNN(size_t k, const T& o_q, DataSet<T>& O) const {
             R.pop();
         }
     }
-    std::vector<T> result; result.reserve(k);
+    std::vector<Data<T>> result; result.reserve(k);
     while (!R.empty()) {
         if (!R.top().second) break;
         result.push_back( *(R.top().second) );
@@ -40,14 +40,14 @@ std::vector<T> Swap<T>::kNN(size_t k, const T& o_q, DataSet<T>& O) const {
 }
 
 template<typename T>
-std::vector<T> Swap<T>::execute(size_t k, const T& o_q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
-    std::vector<T> R = kNN(k, o_q, O);
+std::vector<Data<T>> Swap<T>::execute(size_t k, Data<T>& o_q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
+    std::vector<Data<T>> R = kNN(k, o_q, O);
     // get O minus R
-    std::vector<T> O_minus_R;
+    std::vector<Data<T>> O_minus_R;
     std::set_difference(
         O.getAllData().begin(), O.getAllData().end(), R.begin(), R.end(), std::back_inserter(O_minus_R)
     );
-    sort(O_minus_R.begin(), O_minus_R.end(), [distance_sim, o_q](const T& a, const T& b) {
+    sort(O_minus_R.begin(), O_minus_R.end(), [this, o_q](const Data<T>& a, const Data<T>& b) {
         float d1 = distance_sim(o_q, a);
         float d2 = distance_sim(o_q, b);
         return d1 < d2;

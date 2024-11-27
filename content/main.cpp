@@ -1,17 +1,14 @@
 #include <iostream>
-using namespace std;
-
-#include "Metric/DFM/DFM.h"
+#include "Algorithms/DFM/DFM.h"
+#include "Algorithms/BRID/BRID.h"
+#include "Algorithms/MMR/MMR.h"
+#include "Algorithms/Motley/Motley.h"
+#include "Algorithms/Swap/Swap.h"
 #include "DataStructures/Data/Data.h"
 
 // Main de pruebas. puede ser descartado
 int main() {
-    /*
-    auto fn = [](const int& a, const int& b) {
-        return static_cast<float>(a + b);
-    };
-    */
-
+    
     auto fn1 = [](const Data<int>& a, const Data<int>& b) {
         return static_cast<float>(a.getContent() + b.getContent()); //should be embeding
     };

@@ -1,7 +1,7 @@
 #include "Algorithms/Motley/Motley.h"
 
 template<typename T>
-std::vector<Data<T>> Motley<T>::execute(DataSet<T>& O, std::vector<Cluster<T>>& C, Data<T> q, int k) {
+std::vector<Data<T>> Motley<T>::execute(size_t k, Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
     auto content = O.getAllData();
     //ordenar por similutud con q
     std::sort(content.begin(), content.end(), [&q, this](const Data<T>& a, const Data<T>& b) {

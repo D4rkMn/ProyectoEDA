@@ -38,7 +38,7 @@ float DFM<T>::execute_db_star() {
 template<typename T>
 float DFM<T>::execute_sil_star() {
     //Calculo de los medoides mas cercanos
-    vector<Data<T>> NearestMedoid;
+    std::vector<Data<T>> NearestMedoid;
     for(int i=0; i<C.size(); i++){
         float min_distance = std::numeric_limits<float>::max();
         int nearest_medoid_index = -1;

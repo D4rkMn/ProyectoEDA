@@ -10,7 +10,7 @@ public:
         std::function<float(const Data<T>&, const Data<T>&)> div)
         : Algorithm<T>(sim, div) {}
 
-    std::vector<Data<T>> execute(DataSet<T>& O, std::vector<Cluster<T>>& C, Data<T> q, int k) override;
+    std::vector<Data<T>> execute(size_t k, Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) override;
 };
 
 #include "Algorithms/BRID/BRID.tpp"
