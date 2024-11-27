@@ -14,7 +14,7 @@ public:
             float r = 0.5f) 
         : Algorithm<T>(sim, div), r(r) {}
 
-    std::vector<T> execute(DataSet<T>& O, std::vector<Cluster<T>>& C) override;
+    std::vector<T> execute(size_t k, const T& o_q, DataSet<T>& O, std::vector<Cluster<T>>& C) override;
 };
 
 #include "Algorithms/Motley/Motley.tpp"

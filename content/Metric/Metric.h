@@ -1,22 +1,22 @@
-#ifndef ALGORITHM_H
-#define ALGORITHM_H
+#ifndef METRIC_H
+#define METRIC_H
 
 #include "DataStructures/DataSet/DataSet.h"
 #include "DataStructures/Cluster/Cluster.h"
-#include <vector>
 #include <functional>
+#include <vector>
 
 template<typename T>
-class Algorithm {
+class Metric {
 protected:
     std::function<float(const T&, const T&)> distance_sim;
     std::function<float(const T&, const T&)> distance_div;
 
 public:
-    Algorithm(std::function<float(const T&, const T&)> sim,
+    Metric(std::function<float(const T&, const T&)> sim,
              std::function<float(const T&, const T&)> div){}
-    
-    virtual std::vector<T> execute(size_t k, const T& o_q, DataSet<T>& O, 
+
+    virtual float execute(std::vector<T>& R, DataSet<T>& O,
                                  std::vector<Cluster<T>>& C) = 0;
 };
 
