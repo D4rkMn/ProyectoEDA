@@ -19,4 +19,6 @@ public:
     size_t size() const;
 };
 
+#include "DataStructures/DataSet/DataSet.tpp"
+
 #endif

@@ -23,4 +23,6 @@ public:
     size_t size() const;
 };
 
+#include "DataStructures/Cluster/Cluster.tpp"
+
 #endif

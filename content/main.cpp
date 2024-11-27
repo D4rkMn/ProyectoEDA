@@ -10,11 +10,15 @@
 int main() {
     
     auto fn1 = [](const Data<int>& a, const Data<int>& b) {
-        return static_cast<float>(a.getContent() + b.getContent()); //should be embeding
+        return static_cast<double>(a.getContent() + b.getContent()); //should be embeding
     };
 
-    DFM<int> xd(fn1, fn1);
-
+    DFM<int> dfm(fn1, fn1);
+    BRID<int> brid(fn1, fn1);
+    MMR<int> mmr(fn1, fn1);
+    Motley<int> motley(fn1, fn1);
+    Swap<int> _swap(fn1, fn1);
+    
     printf("hello world\n");
     return 0;
 }

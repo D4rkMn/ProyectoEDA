@@ -36,6 +36,15 @@ public:
         return embedding; 
     }
 
+    // Operadores
+    bool operator==(const Data<T>& other) const {
+        return this->content == other.content;
+    }
+
+    bool operator<(const Data<T>& other) const {
+        return this->content < other.content;
+    }
+
     // Método getJA - versiones const y no-const
     T getJA() { 
         return 2; 

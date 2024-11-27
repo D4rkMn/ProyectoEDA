@@ -6,17 +6,17 @@
 template<typename T>
 class Swap : public Algorithm<T> {
 private:
-    float lambda;
-    float objective_function(Data<T>&, Data<T>&, std::vector<Data<T>>&) const;
-    std::vector<Data<T>> kNN(size_t k, Data<T>& o_q, DataSet<T>& O) const;
+    double lambda;
+    double objective_function(const Data<T>&, const Data<T>&, std::vector<Data<T>>&) const;
+    std::vector<Data<T>> kNN(size_t k, const Data<T>& o_q, DataSet<T>& O) const;
 
 public:
-    Swap(std::function<float(const Data<T>&, const Data<T>&)> sim,
-        std::function<float(const Data<T>&, const Data<T>&)> div,
-         float lambda = 0.5f)
+    Swap(std::function<double(const Data<T>&, const Data<T>&)> sim,
+        std::function<double(const Data<T>&, const Data<T>&)> div,
+         double lambda = 0.5f)
         : Algorithm<T>(sim, div), lambda(lambda) {}
 
-    std::vector<Data<T>> execute(size_t k, Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) override;
+    std::vector<Data<T>> execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) override;
 };
 
 #include "Algorithms/Swap/Swap.tpp"

@@ -5,28 +5,29 @@
 
 // Swap con MMR
 template<typename T>
-float Swap<T>::objective_function(Data<T>& o_i, Data<T>& o_q, std::vector<Data<T>>& R) const {
-    float result = (1 - lambda) * distance_sim(o_i, o_q);
-    float sum = 0;
+double Swap<T>::objective_function(const Data<T>& o_i, const Data<T>& o_q, std::vector<Data<T>>& R) const {
+    double result = (1 - lambda) * this->distance_sim(o_i, o_q);
+    double sum = 0;
     for (const auto& o_j: R) {
-        sum += distance_div(o_i, o_j);
+        sum += this->distance_div(o_i, o_j);
     }
     result += 2 * lambda * sum;
     return result;
 }
 
 template<typename T>
-std::vector<Data<T>> Swap<T>::kNN(size_t k, Data<T>& o_q, DataSet<T>& O) const {
-    std::priority_queue< std::pair<float, Data<T>*> > R;
-    float inf = std::numeric_limits<float>::max();
+std::vector<Data<T>> Swap<T>::kNN(size_t k, const Data<T>& o_q, DataSet<T>& O) const {
+    std::priority_queue< std::pair<double, const Data<T>*> > R;
+    double inf = std::numeric_limits<double>::max();
     for (size_t i = 0; i < k; i++) {
         R.push({inf, nullptr});
     }
     for (const auto& o_i: O.getAllData()) {
-        float current_distance = distance_sim(o_i, o_q);
-        float max_distance = R.top().first;
+        double current_distance = this->distance_sim(o_i, o_q);
+        double max_distance = R.top().first;
         if (max_distance > current_distance) {
-            R.push({current_distance, &o_i});
+            std::pair<double, const Data<T>*> p = {current_distance, &o_i};
+            R.push(p);
             R.pop();
         }
     }
@@ -40,16 +41,16 @@ std::vector<Data<T>> Swap<T>::kNN(size_t k, Data<T>& o_q, DataSet<T>& O) const {
 }
 
 template<typename T>
-std::vector<Data<T>> Swap<T>::execute(size_t k, Data<T>& o_q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
+std::vector<Data<T>> Swap<T>::execute(size_t k, const Data<T>& o_q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
     std::vector<Data<T>> R = kNN(k, o_q, O);
     // get O minus R
     std::vector<Data<T>> O_minus_R;
     std::set_difference(
         O.getAllData().begin(), O.getAllData().end(), R.begin(), R.end(), std::back_inserter(O_minus_R)
     );
-    sort(O_minus_R.begin(), O_minus_R.end(), [this, o_q](const Data<T>& a, const Data<T>& b) {
-        float d1 = distance_sim(o_q, a);
-        float d2 = distance_sim(o_q, b);
+    std::sort(O_minus_R.begin(), O_minus_R.end(), [this, o_q](const Data<T>& a, const Data<T>& b) -> bool {
+        double d1 = this->distance_sim(o_q, a);
+        double d2 = this->distance_sim(o_q, b);
         return d1 < d2;
     });
 
@@ -64,10 +65,10 @@ std::vector<Data<T>> Swap<T>::execute(size_t k, Data<T>& o_q, DataSet<T>& O, std
             // if element already swapped, skip
             if (swapped.find(j) != swapped.end()) continue;
 
-            float prev_score = objective_function(R[j], o_q, R);
+            double prev_score = objective_function(R[j], o_q, R);
             // test swap
             std::swap(O_minus_R[i], R[j]);
-            float new_score = objective_function(R[j], o_q, R);
+            double new_score = objective_function(R[j], o_q, R);
 
             // if score is better, change is permanent
             if (new_score > prev_score) {

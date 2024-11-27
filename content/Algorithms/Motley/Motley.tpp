@@ -1,10 +1,10 @@
 #include "Algorithms/Motley/Motley.h"
 
 template<typename T>
-std::vector<Data<T>> Motley<T>::execute(size_t k, Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
+std::vector<Data<T>> Motley<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
     auto content = O.getAllData();
     //ordenar por similutud con q
-    std::sort(content.begin(), content.end(), [&q, this](const Data<T>& a, const Data<T>& b) {
+    std::sort(content.begin(), content.end(), [&q, this](const Data<T>& a, const Data<T>& b) -> bool {
         return this->distance_sim(a, q) < this->distance_sim(b, q);
     });
 
@@ -13,10 +13,10 @@ std::vector<Data<T>> Motley<T>::execute(size_t k, Data<T>& q, DataSet<T>& O, std
     R.push_back(content[0]);
 
     bool is_far;
-    for(int i=1; i<content.size(); i++){
+    for(size_t i=1; i<content.size(); i++){
         is_far = true;
-        for(int j=0; j<R.size(); j++){
-            if(distance_sim(R[j], content[i]) < r){
+        for(size_t j=0; j<R.size(); j++){
+            if(this->distance_sim(R[j], content[i]) < r){
                 is_far = false;
                 break;
             }
@@ -33,7 +33,7 @@ std::vector<Data<T>> Motley<T>::execute(size_t k, Data<T>& q, DataSet<T>& O, std
     C.clear();
 
     //modificar los clusters, hacieno que cada elemento de R sea el medoid de su cluster
-    for(int i=0; i<R.size(); i++){
+    for(size_t i=0; i<R.size(); i++){
         Cluster<T> cluster;
         cluster.setMedoid(R[i]);
         C.push_back(cluster);
@@ -41,19 +41,19 @@ std::vector<Data<T>> Motley<T>::execute(size_t k, Data<T>& q, DataSet<T>& O, std
 
     //asignar cada elemento de O al cluster cuyo medoid sea el más cercano, usar distancia de similitud
     bool flag;
-    for(int i=0; i<O.size(); i++){
-        float min_distance = std::numeric_limits<float>::max();
+    for(size_t i=0; i<O.size(); i++){
+        double min_distance = std::numeric_limits<double>::max();
         int cluster_index = -1;
         flag = false;
-        for(int j=0; j<C.size(); j++){
+        for(size_t j=0; j<C.size(); j++){
 
             if (O.getData(i) == C[j].getMedoid()){
                 flag = true;
                 cluster_index = j;
                 break;
             }
-            if(distance_sim(O.getData(i), C[j].getMedoid()) < min_distance){
-                min_distance = distance_sim(O.getData(i), C[j].getMedoid());
+            if(this->distance_sim(O.getData(i), C[j].getMedoid()) < min_distance){
+                min_distance = this->distance_sim(O.getData(i), C[j].getMedoid());
                 cluster_index = j;
             }
         }

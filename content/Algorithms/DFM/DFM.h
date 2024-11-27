@@ -10,16 +10,16 @@
 template<typename T>
 class DFM {
 private:
-    std::vector<float> answer;
-    std::function<float(const Data<T>&, const Data<T>&)> distance_sim;
-    std::function<float(const Data<T>&, const Data<T>&)> distance_div;
+    std::vector<double> answer;
+    std::function<double(const Data<T>&, const Data<T>&)> distance_sim;
+    std::function<double(const Data<T>&, const Data<T>&)> distance_div;
     std::vector<Data<T>> R;
     DataSet<T> O;
     std::vector<Cluster<T>> C;
 
 public:
-    DFM(std::function<float(const Data<T>&, const Data<T>&)> sim,
-        std::function<float(const Data<T>&, const Data<T>&)> div) {
+    DFM(std::function<double(const Data<T>&, const Data<T>&)> sim,
+        std::function<double(const Data<T>&, const Data<T>&)> div) {
         distance_sim = sim;
         distance_div = div;
         answer.reserve(7);
@@ -27,15 +27,15 @@ public:
 
     void initialize(std::vector<Data<T>>& R, DataSet<T>& O, 
                    std::vector<Cluster<T>>& C);
-    std::vector<float> execute();
+    std::vector<double> execute();
 
-    float execute_dunn_star();
-    float execute_db_star();
-    float execute_sil_star();
-    float execute_sigma_sim();
-    float execute_sigma_div();
-    float execute_u_sim();
-    float execute_u_div();
+    double execute_dunn_star();
+    double execute_db_star();
+    double execute_sil_star();
+    double execute_sigma_sim();
+    double execute_sigma_div();
+    double execute_u_sim();
+    double execute_u_div();
 };
 
 #include "Algorithms/DFM/DFM.tpp"

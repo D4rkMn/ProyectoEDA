@@ -1,7 +1,7 @@
-# Algoritmos de Clustering y Diversidad
+# Métricas de calidad para algoritmos de Clustering y Diversidad
 
 ## Descripción del Proyecto
-Este proyecto implementa una suite de algoritmos de clustering y diversidad, incluyendo DFM (Diversity Features Model), Motley, BRID, Swap y MMR. El sistema está diseñado para manejar diversos tipos de datos a través del uso de templates en C++, permitiendo una gran flexibilidad en su aplicación.
+Este proyecto implementa una métrica para la clasificación de resultados de búsquedas de similaridad diversificadas llamada DFM (Diversity Features Model). Adicionalmente, se implementa una suite de algoritmos de clustering y diversidad, incluyendo Motley, BRID, Swap y MMR. El sistema está diseñado para manejar diversos tipos de datos a través del uso de templates en C++, permitiendo una gran flexibilidad en su aplicación.
 
 ## Integrantes del Equipo
 - Melisa Rivera
@@ -9,7 +9,6 @@ Este proyecto implementa una suite de algoritmos de clustering y diversidad, inc
 - Alejandro Oré
 - Alexandra
 
-# todo: cambiar esta parte del readme (si aceptan mi pr claro)
 ## Estructura del Proyecto
 ```
 .
@@ -108,10 +107,10 @@ DataSet<YourDataType> dataset;
 // Añadir datos...
 
 // Configurar algoritmo
-auto simFunction = [](const YourDataType& a, const YourDataType& b) -> float {
+auto simFunction = [](const Data<YourDataType>& a, const Data<YourDataType>& b) -> double {
     // Implementar función de similitud
 };
-auto divFunction = [](const YourDataType& a, const YourDataType& b) -> float {
+auto divFunction = [](const Data<YourDataType>& a, const Data<YourDataType>& b) -> double {
     // Implementar función de diversidad
 };
 
@@ -119,7 +118,8 @@ DFM<YourDataType> dfm(simFunction, divFunction);
 std::vector<Cluster<YourDataType>> clusters;
 
 // Ejecutar algoritmo
-auto result = dfm.execute(dataset, clusters);
+dfm.initialize(result, dataset, clusters);
+dfm.execute();
 ```
 
 
