@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-#include "Algorithms/DFM/DFM.h"
+#include "Metric/DFM/DFM.h"
 #include "DataStructures/Data/Data.h"
 
 // Main de pruebas. puede ser descartado

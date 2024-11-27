@@ -7,6 +7,7 @@ template<typename T>
 class MMR : public Algorithm<T> {
 private:
     float lambda;
+    float objective_function(const T&, const T&, std::vector<T>&) const;
 
 public:
     MMR(std::function<float(const Data<T>&, const Data<T>&)> sim,

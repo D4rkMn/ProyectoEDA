@@ -46,7 +46,7 @@ public:
     Algorithm(std::function<float(const T&, const T&)> sim,
              std::function<float(const T&, const T&)> div){}
     
-    virtual std::vector<T> execute(DataSet<T>& O, 
+    virtual std::vector<T> execute(size_t k, const T& o_q, DataSet<T>& O, 
                                  std::vector<Cluster<T>>& C) = 0;
 };
 
