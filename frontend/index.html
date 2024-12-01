@@ -3,113 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Clásico</title>
+    <title>Diversify</title>
     <style>
-        /* Tus estilos anteriores permanecen iguales */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
         .header {
-            background-color: #ededed;
-            color: white;
-            padding: 18px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
+
         .header h1 {
-            margin: 0;
             font-size: 24px;
-            background-color: #ff0000;
-            padding: 5px 10px;
-            color: white;
-            border-radius: 6px;
+            color: #1DB954;
+            font-weight: 700;
+            letter-spacing: -0.04em;
         }
+
         .search-bar {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            flex: 0 1 400px;
         }
+
         .search-bar input[type="text"] {
-            padding: 5px;
-            font-size: 16px;
-            width: 300px;
-        }
-        .search-bar button {
-            background-color: #444;
-            color: white;
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 20px;
             border: none;
-            padding: 5px 10px;
+            background-color: #242424;
+            color: #ffffff;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .search-bar input[type="text"]:focus {
+            outline: none;
+            background-color: #2a2a2a;
+        }
+
+        .search-bar input[type="text"]::placeholder {
+            color: #a7a7a7;
+        }
+
+        .search-bar button {
+            background-color: #1DB954;
+            color: black;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
         }
+
         .search-bar button:hover {
-            background-color: #222;
+            background-color: #1ed760;
+            transform: scale(1.04);
         }
+
         .video-list {
-            padding: 20px;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 16px;
         }
+
         .video-item {
-            background-color: white;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
+            background-color: #181818;
+            border-radius: 8px;
+            padding: 16px;
             display: flex;
-            align-items: flex-start;
-            gap: 10px;
+            gap: 16px;
+            transition: background-color 0.3s;
         }
+
+        .video-item:hover {
+            background-color: #282828;
+        }
+
         .video-thumbnail {
-            width: 120px;
+            width: 160px;
             height: 90px;
-            background-color: #ddd;
+            background-color: #282828;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            color: #666;
+            color: #a7a7a7;
+            font-size: 12px;
+            flex-shrink: 0;
         }
+
         .video-details {
-            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
+
         .video-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0066cc;
-            margin: 0 0 5px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            cursor: pointer;
         }
+
         .video-title:hover {
             text-decoration: underline;
         }
+
         .video-description {
             font-size: 14px;
-            color: #666;
+            color: #a7a7a7;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .video-item {
+                flex-direction: column;
+            }
+
+            .video-thumbnail {
+                width: 100%;
+                height: 200px;
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="header">
-        <h1>DiverTube</h1>
+        <h1>Diversify</h1>
         <div class="search-bar">
-            <input type="text" id="search" placeholder="Buscar videos...">
+            <input type="text" id="search" placeholder="¿Qué quieres ver?">
             <button onclick="buscarVideos()">Buscar</button>
         </div>
     </div>
 
     <div class="video-list" id="video-list">
-        <!-- Aquí se mostrarán los videos -->
+        <!-- Los videos se mostrarán aquí -->
     </div>
 
     <script>
+        const API_URL = "http://127.0.0.1:5000";
+        
         async function buscarVideos() {
             const query = document.getElementById("search").value;
+            const algoritmo = "algoritmo1";
             try {
-                const response = await fetch(`/buscar_videos?query=${encodeURIComponent(query)}`);
+                const response = await fetch(`${API_URL}/buscar_videos/${algoritmo}?query=${encodeURIComponent(query)}`);
                 if (response.ok) {
-                    const videos = await response.json();
-                    mostrarVideos(videos);
+                    const data = await response.json();
+                    if (data.resultados) {
+                        mostrarVideos(data.resultados);
+                    } else {
+                        console.error("No se encontraron resultados.");
+                        mostrarVideos([]);
+                    }
                 } else {
                     console.error("Error al obtener videos");
                 }
@@ -122,32 +201,27 @@
             const contenedor = document.getElementById("video-list");
             contenedor.innerHTML = "";
             if (videos.length === 0) {
-                contenedor.innerHTML = "<p>No se encontraron videos.</p>";
+                contenedor.innerHTML = "<p style='text-align: center; color: #a7a7a7; padding: 40px;'>No se encontraron videos.</p>";
                 return;
             }
             videos.forEach(video => {
                 contenedor.innerHTML += `
                     <div class="video-item">
-                        <div class="video-thumbnail">Sin imagen</div>
+                        <div class="video-thumbnail">Vista previa</div>
                         <div class="video-details">
-                            <p class="video-title">${video}</p>
-                            <p class="video-description">Este es un video generado aleatoriamente.</p>
+                            <p class="video-title">${video.titulo}</p>
+                            <p class="video-description">${video.descripcion}</p>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // Buscar automáticamente cuando se presione Enter
         document.getElementById("search").addEventListener("keyup", function(event) {
             if (event.key === "Enter") {
                 buscarVideos();
             }
         });
-
-        // Cargar videos iniciales
-        buscarVideos();
     </script>
-
 </body>
 </html>
