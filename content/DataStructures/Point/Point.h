@@ -2,16 +2,18 @@
 #define POINT_H
 
 #include <vector>
+#include <cmath>
 
 class Point {
-private:
+public:
     std::vector<double> coordinates;
 
-public:
     Point(int dim = 0);
+    Point(const std::vector<double>& coords);
     void print() const;
     std::vector<double>& getCoordinates();
     const std::vector<double>& getCoordinates() const;
+    double euclideanDistance(const Point& other) const;
 };
 
 #endif

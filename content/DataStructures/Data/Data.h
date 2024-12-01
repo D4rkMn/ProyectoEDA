@@ -13,6 +13,7 @@ public:
     // Constructor
     Data() = default;
     Data(const T& content) : content(content) {}
+    Data(const T& content, const Point& embedding) : content(content), embedding(embedding) {}
 
     // Métodos para obtener y modificar el contenido
     T& getContent() { 
