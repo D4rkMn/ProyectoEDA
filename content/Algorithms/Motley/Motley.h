@@ -2,6 +2,7 @@
 #define MOTLEY_H
 
 #include "Algorithms/Algorithm.h"
+#include <algorithm>
 
 template<typename T>
 class Motley : public Algorithm<T> {

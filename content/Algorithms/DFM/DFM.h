@@ -13,9 +13,10 @@ private:
     std::vector<double> answer;
     std::function<double(const Data<T>&, const Data<T>&)> distance_sim;
     std::function<double(const Data<T>&, const Data<T>&)> distance_div;
-    std::vector<Data<T>> R;
-    DataSet<T> O;
+    std::vector<Data<T>> R; // R es el conjunto de datos de referencia
+    DataSet<T> O; // O es el conjunto de datos de observación
     std::vector<Cluster<T>> C;
+    Data<T> query;
 
 public:
     DFM(std::function<double(const Data<T>&, const Data<T>&)> sim,
@@ -26,7 +27,7 @@ public:
         }
 
     void initialize(std::vector<Data<T>>& R, DataSet<T>& O, 
-                   std::vector<Cluster<T>>& C);
+                   std::vector<Cluster<T>>& C, Data<T>& query);
     std::vector<double> execute();
 
     double execute_dunn_star();

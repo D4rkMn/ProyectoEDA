@@ -1,12 +1,15 @@
 #include <cmath>
 #include <limits>
 
+#include "Algorithms/DFM/DFM.h"
+
 template<typename T>
 void DFM<T>::initialize(std::vector<Data<T>>& R, DataSet<T>& O, 
-                        std::vector<Cluster<T>>& C) {
+                        std::vector<Cluster<T>>& C, Data<T>& query) {
     this->R = R;
     this->O = O;
     this->C = C;
+    this->query = query;
 }
 
 template<typename T>
@@ -26,7 +29,47 @@ std::vector<double> DFM<T>::execute() {
 template<typename T>
 double DFM<T>::execute_dunn_star() {
     // TODO: Implementar el índice Dunn*
-    return 0.0f;
+
+    //calcular el max C_m pertenece a C (max o_h pertenece a C_m(distance_div(o_h, query)))
+    double max_intracluster_distance = 0.0f;
+
+    for (int m = 0; m < C.size(); m++) {
+        double intracluster_distance = 0.0f;
+
+        auto data_m = C[m].getAllData();
+        for (int h = 0; h < data_m.size(); h++) {
+            intracluster_distance += distance_div(data_m[h], query);
+        }
+
+        if (intracluster_distance > max_intracluster_distance) {
+            max_intracluster_distance = intracluster_distance;
+        }
+    }
+
+    if (max_intracluster_distance == 0.0f) {
+        return 0.0f;
+    }
+
+    //recorrer todos los pares de clusters en la lista de clusters
+    double min_intercluster_normalization = std::numeric_limits<double>::max();
+
+    for(int i=0; i<C.size(); i++){
+        for(int j=0; j<C.size(); j++){
+            if(i != j){
+                //calcular distancia entre medoides o_i y o_j
+                double intercluster_distance = distance_div(C[i].getMedoid(), C[j].getMedoid());
+
+                //calcular la normalización
+                double normalization = intercluster_distance / max_intracluster_distance;
+
+                if (normalization < min_intercluster_normalization) {
+                    min_intercluster_normalization = normalization;
+                }
+            }
+        }
+    }
+
+    return min_intercluster_normalization;
 }
 
 template<typename T>
