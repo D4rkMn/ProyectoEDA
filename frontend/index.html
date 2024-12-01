@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clásico</title>
+    <style>
+        /* Tus estilos anteriores permanecen iguales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #ededed;
+            color: white;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            background-color: #ff0000;
+            padding: 5px 10px;
+            color: white;
+            border-radius: 6px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-bar input[type="text"] {
+            padding: 5px;
+            font-size: 16px;
+            width: 300px;
+        }
+        .search-bar button {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #222;
+        }
+        .video-list {
+            padding: 20px;
+        }
+        .video-item {
+            background-color: white;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .video-thumbnail {
+            width: 120px;
+            height: 90px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .video-details {
+            flex-grow: 1;
+        }
+        .video-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0066cc;
+            margin: 0 0 5px;
+        }
+        .video-title:hover {
+            text-decoration: underline;
+        }
+        .video-description {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>DiverTube</h1>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Buscar videos...">
+            <button onclick="buscarVideos()">Buscar</button>
+        </div>
+    </div>
+
+    <div class="video-list" id="video-list">
+        <!-- Aquí se mostrarán los videos -->
+    </div>
+
+    <script>
+        async function buscarVideos() {
+            const query = document.getElementById("search").value;
+            try {
+                const response = await fetch(`/buscar_videos?query=${encodeURIComponent(query)}`);
+                if (response.ok) {
+                    const videos = await response.json();
+                    mostrarVideos(videos);
+                } else {
+                    console.error("Error al obtener videos");
+                }
+            } catch (error) {
+                console.error("Error en la solicitud:", error);
+            }
+        }
+
+        function mostrarVideos(videos) {
+            const contenedor = document.getElementById("video-list");
+            contenedor.innerHTML = "";
+            if (videos.length === 0) {
+                contenedor.innerHTML = "<p>No se encontraron videos.</p>";
+                return;
+            }
+            videos.forEach(video => {
+                contenedor.innerHTML += `
+                    <div class="video-item">
+                        <div class="video-thumbnail">Sin imagen</div>
+                        <div class="video-details">
+                            <p class="video-title">${video}</p>
+                            <p class="video-description">Este es un video generado aleatoriamente.</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Buscar automáticamente cuando se presione Enter
+        document.getElementById("search").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                buscarVideos();
+            }
+        });
+
+        // Cargar videos iniciales
+        buscarVideos();
+    </script>
+
+</body>
+</html>
