@@ -4,3 +4,12 @@ obj/*
 obj/
 dep/*
 dep/
+
+#flask 
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+#venv python
+venv/
