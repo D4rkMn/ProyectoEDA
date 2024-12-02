@@ -13,3 +13,7 @@ __pycache__/
 
 #venv python
 venv/
+
+frontend/nombres_embeddings_yt.txt
+frontend/query.txt
+frontend/nombres_yt.txt

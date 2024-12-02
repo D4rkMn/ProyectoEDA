@@ -13,97 +13,93 @@
 #include <filesystem>
 #include <sstream>
 
-// Main de pruebas. puede ser descartado
+// Función para leer el archivo `query.txt`
+bool readQueryFile(const std::string& filePath, std::string& algorithmType, std::vector<double>& queryEmbedding, std::string& queryContent) {
+    std::ifstream queryFile(filePath);
+    if (!queryFile.is_open()) {
+        std::cerr << "Error: No se pudo abrir el archivo query.txt" << std::endl;
+        return false;
+    }
+
+    std::getline(queryFile, algorithmType);
+    std::string embeddingLine;
+    std::getline(queryFile, embeddingLine);
+    std::getline(queryFile, queryContent);
+
+    queryEmbedding.clear();
+    std::stringstream ss(embeddingLine);
+    std::string value;
+    while (std::getline(ss, value, ';')) {
+        queryEmbedding.push_back(std::stod(value));
+    }
+
+    return true;
+}
+
+// Función principal
 int main() {
-    
-    auto fn1 = [](const Data<std::string>& a, const Data<std::string>& b) {
-        return static_cast<double>( a.getEmbedding().euclideanDistance(b.getEmbedding()) );
-    };
-
-    //leer el archivo de datos y crear el dataset
-    std::ifstream file("frontend/nombres_yt.txt");
-
-    if(!file.is_open()){
-        std::cout << "Error al abrir el archivo" << std::endl;
+    // Leer el archivo de datos y crear el dataset
+    std::ifstream file("nombres_embeddings_yt.txt");
+    if (!file.is_open()) {
+        std::cerr << "Error: No se pudo abrir el archivo nombres_embeddings_yt.txt" << std::endl;
         return 1;
     }
 
     DataSet<std::string> dataset;
-
-    std::string content;
-    std::string linea_numeros;
+    std::string content, linea_numeros;
     std::vector<double> numeros;
 
-    while(std::getline(file, content)){
+    while (std::getline(file, content)) {
         numeros.clear();
         std::getline(file, linea_numeros);
         std::stringstream ss(linea_numeros);
         std::string numero;
         while (std::getline(ss, numero, ';')) {
-            numeros.push_back(std::stod(numero)); // Convertir de string a int
+            numeros.push_back(std::stod(numero));
         }
         dataset.addData(Data<std::string>(content, Point(numeros)));
     }
 
-    auto data = dataset.getData(3);
-    std::cout << data.getContent() << std::endl;
+    // Leer el archivo query.txt
+    std::string algorithmType, queryContent;
+    std::vector<double> queryEmbedding;
 
-    // crear la consulta
-    std::string query_Point;
-
-    query_Point = "0.024951335;0.061026648;-0.037079792;-0.056108598;-0.07025891;0.005086571;0.046224177;0.03703122;-0.08713483;0.05148941;0.036150467;0.0038087526;-0.0024364225;-0.032733347;0.022400321;0.0036989031;-0.028283253;-0.007826897;0.04043449;-0.03911048;0.0091554085;0.012336513;-0.036056858;0.06557357;-0.03507025;0.10126138;-0.008885906;0.00452374;0.036312465;-0.05916806;-0.019334087;0.09446684;0.1692253;-0.006555448;0.017672395;0.07714228;-0.01512917;-0.03537455;-0.026710201;0.01236095;-0.16720067;-0.014816593;-0.046919297;0.007511064;0.007966919;-0.1082106;-0.023426197;0.021149604;-0.026137246;0.009585704;-0.08270417;-0.07316628;0.0075693843;-0.049523845;-0.018308416;0.015740411;0.0664019;-0.00010632245;0.011919801;0.03811935;-0.02168104;0.0011694991;-0.12503253;0.029705236;0.034948956;-0.03013361;0.019731216;-0.0036996235;0.009252535;-0.023149967;0.015321504;-0.04561534;0.016325517;0.07225176;-0.021313794;0.017585618;0.019960599;0.04297385;0.027406052;-0.11888648;0.053218536;-0.00517935;-0.05325357;0.009847456;0.017608056;0.028772373;0.018258696;0.029988075;0.0852958;0.058625363;-0.041394524;0.053657297;-0.0025204974;-0.04530022;-0.050493997;0.02235098;0.05943031;-0.14657503;-0.009285467;0.18138602;0.03830885;0.012398732;0.07909934;-0.018678367;-0.03127258;-0.057417244;0.06175294;-0.07410657;0.0076927547;-0.011804389;-0.026298787;-0.030930888;-0.043927465;-0.029754233;-0.045935735;0.0782044;0.0076729218;0.030656302;0.014348646;0.028600002;0.024178365;-0.013228481;-0.04359916;-0.035361163;-0.014301414;-0.07164616;-0.036439758;-4.1538392e-33;-0.022683235;-0.05245662;-0.040470205;0.034256905;0.040818337;0.006443477;0.024675397;0.025984246;-0.10991872;-0.050193764;-0.005806893;0.053975534;0.011799265;0.11212825;0.17313868;0.0038208598;-0.08148824;0.08830209;0.030284176;-0.017536838;0.0017774077;0.013228397;0.014339045;0.010352258;0.05568037;0.036697164;-0.020953925;-0.04513941;-0.04051417;0.029211627;0.042228602;0.032269686;-0.038620602;0.0076443884;0.031567812;-0.004440964;0.039079446;-0.03499209;0.033741426;0.009426867;0.006742978;0.009575953;0.08674209;0.037955727;0.069482744;0.016187528;0.07661952;0.033840027;0.002367923;-0.011731823;-0.0119065475;-0.0013255508;-0.014179272;-0.058301985;-0.06973434;0.040268887;-0.06519819;0.070419356;0.032275774;-0.056496195;0.060278248;0.11554429;0.048682887;-0.041396685;-0.021795543;-0.039144073;-0.039243788;0.001119898;0.2306469;0.03853816;-0.12604864;-0.065562956;0.027489409;0.031128792;-0.05394331;0.014774575;-0.010126553;-0.0014615234;-0.022336934;-0.013590746;-0.06635236;-0.031989176;0.029239208;-0.001898628;0.10250828;0.10837434;0.024532087;0.0301005;-0.05606576;0.07941907;0.008237715;0.037387557;-0.007843129;0.037574187;0.0364385;1.8857117e-33;0.0040036645;0.031510998;0.029135076;-0.020402044;-0.0014145292;0.004949569;-0.035685178;-0.02789994;-0.036097806;-0.014983746;-0.012139589;-0.07787209;0.046472587;-0.029509539;-0.06263661;0.049749997;0.014439588;-0.035435785;-0.09693883;0.02277659;-0.03572052;0.049950942;-0.02179758;-0.043944135;0.0018651073;-0.08218873;0.0818835;-0.015745386;0.002117387;-0.016644651;0.06391619;0.014135539;-0.14926495;0.00070740964;-0.010120486;0.0148490425;0.07691518;-0.0009368611;-0.028052084;0.078458436;0.10264763;-0.007481518;-0.0618419;0.09860496;-0.020957014;0.043841697;-0.053493593;-0.04749357;-0.058201194;-0.02871731;-0.030803345;-0.027041987;-0.050394155;-0.052693292;0.059139166;-0.04003767;0.04891444;-0.023588346;-0.06745525;0.02115795;-0.010754999;0.009363136;0.012703866;-0.028110953;0.034613702;-0.0010867506;-0.06550426;0.021675477;-0.017602313;0.04278812;0.066064164;0.01208792;-0.080709256;0.0041866233;-0.12775257;0.085211396;-0.0551821;0.010779661;-0.05400596;0.0018015632;0.04716756;-0.041943956;0.024052784;0.0321679;-0.016810616;-0.0133467205;0.022889579;0.026146932;-0.013018507;0.06983152;0.0036910698;0.05559726;-0.0045909514;-0.015779195;-0.0023194554;-1.2617376e-08;0.020028427;-0.033349425;-0.042930383;0.01680875;0.054623153;0.05562959;-0.08887387;-0.020284932;-0.006784743;-0.021141842;-0.04016418;0.0022861029;-0.04949277;0.050851244;0.018549258;0.03489339;0.02303961;0.082075;-0.036740806;0.013617301;0.053560074;0.002783536;-0.030325811;0.034275755;-0.008954264;-0.05618018;-0.010364684;0.047256634;0.042073295;-0.068511836;0.00925144;0.027591772;-0.01364311;-0.053164277;0.028252073;-0.015970495;0.020234121;0.0064988704;0.06729156;-0.14131051;0.055137575;-0.015261192;0.007271496;-0.034954835;-0.023106568;-0.030638557;-0.029725125;0.021322649;0.01366744;-0.028472502;-0.06915129;0.01999311;0.014890258;0.014404155;0.13872032;-0.002760169;-0.0072989105;-0.051074896;-0.083182484;0.040334404;-0.00597311;0.035873894;0.076278634;-0.07193227;";
-    std::stringstream ss(query_Point);
-    std::string numero;
-    numeros.clear();
-    while (std::getline(ss, numero, ';')) {
-        numeros.push_back(std::stod(numero)); // Convertir de string a int
+    if (!readQueryFile("query.txt", algorithmType, queryEmbedding, queryContent)) {
+        return 1;
     }
 
-    Data<std::string> query("query", Point(numeros));
+    Data<std::string> query(queryContent, Point(queryEmbedding));
 
-    //Probar con Motley
+    // Seleccionar y ejecutar el algoritmo
+    auto fn1 = [](const Data<std::string>& a, const Data<std::string>& b) {
+        return static_cast<double>(a.getEmbedding().euclideanDistance(b.getEmbedding()));
+    };
 
-    Motley<std::string> motley(fn1, fn1, 0.5);
     std::vector<Cluster<std::string>> clusters;
+    std::vector<Data<std::string>> result;
 
-    std::cout<<"Resultados con Motley:"<<std::endl;
-    
-    auto result = motley.execute(10, query, dataset, clusters);
+    if (algorithmType == "Motley") {
+        Motley<std::string> motley(fn1, fn1, 0.5);
+        result = motley.execute(10, query, dataset, clusters);
+    } else if (algorithmType == "BRID") {
+        BRID<std::string> brid(fn1, fn1);
+        result = brid.execute(10, query, dataset, clusters);
+    } else if (algorithmType == "Swap") {
+        Swap<std::string> swap(fn1, fn1, 0.5);
+        result = swap.execute(10, query, dataset, clusters);
+    } else if (algorithmType == "MMR") {
+        MMR<std::string> mmr(fn1, fn1, 0.5);
+        result = mmr.execute(10, query, dataset, clusters);
+    } else {
+        std::cerr << "Error: Algoritmo desconocido: " << algorithmType << std::endl;
+        return 1;
+    }
+
+    // Mostrar resultados en la consola
+    std::cout << "Resultados para la consulta: " << queryContent << std::endl;
     for (const auto& data : result) {
         std::cout << data.getContent() << std::endl;
     }
 
-    //Probar con BRID
-    BRID<std::string> brid(fn1, fn1);
-    std::vector<Cluster<std::string>> clusters2;
-
-    std::cout<<"Resultados con BRID:"<<std::endl;
-    auto result2 = brid.execute(10, query, dataset, clusters2);
-    for (const auto& data : result2) {
-        std::cout << data.getContent() << std::endl;
-    }
-
-
-    //probar con swap
-    Swap<std::string> swap(fn1, fn1, 0.5);
-    std::vector<Cluster<std::string>> clusters3;
-
-    std::cout<<"Resultados con Swap:"<<std::endl;
-    auto result3 = swap.execute(10, query, dataset, clusters3);
-    for (const auto& data : result3) {
-        std::cout << data.getContent() << std::endl;
-    }
-
-
-    //probar con mmr
-    MMR<std::string> mmr(fn1, fn1, 0.5);
-    std::vector<Cluster<std::string>> clusters4;
-
-    std::cout<<"Resultados con MMR:"<<std::endl;
-    auto result4 = mmr.execute(10, query, dataset, clusters4);
-    for (const auto& data : result4) {
-        std::cout << data.getContent() << std::endl;
-    }
-    
     return 0;
 }

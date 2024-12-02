@@ -64,6 +64,21 @@
             color: #a7a7a7;
         }
 
+        .search-bar select {
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: none;
+            background-color: #242424;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .search-bar select:focus {
+            outline: none;
+            background-color: #2a2a2a;
+        }
+
         .search-bar button {
             background-color: #1DB954;
             color: black;
@@ -76,9 +91,16 @@
             transition: transform 0.2s, background-color 0.2s;
         }
 
-        .search-bar button:hover {
+        .search-bar button:not(:disabled):hover {
             background-color: #1ed760;
             transform: scale(1.04);
+        }
+
+        .search-bar button:disabled {
+            background-color: #1a1a1a;
+            color: #404040;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .video-list {
@@ -103,6 +125,7 @@
         }
 
         .video-thumbnail {
+            overflow: hidden;
             width: 160px;
             height: 90px;
             background-color: #282828;
@@ -139,13 +162,49 @@
             line-height: 1.5;
         }
 
+        .loading-spinner {
+            display: none;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .loading-spinner.visible {
+            display: flex;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #242424;
+            border-top: 4px solid #1DB954;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
             .header {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 16px;
+                height: 200px;
+                padding: 16px;
             }
 
             .search-bar {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .search-bar select {
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .search-bar button {
                 width: 100%;
             }
 
@@ -165,8 +224,19 @@
         <h1>Diversify</h1>
         <div class="search-bar">
             <input type="text" id="search" placeholder="¿Qué quieres ver?">
-            <button onclick="buscarVideos()">Buscar</button>
+            <select id="algoritmo">
+                <option value="Motley">Motley</option>
+                <option value="BRID">BRID</option>
+                <option value="Swap">Swap</option>
+                <option value="MMR">MMR</option>
+                <option value="Mock-KNN">Mock-KNN</option>
+            </select>
+            <button id="buscar-btn" onclick="buscarVideos()">Buscar</button>
         </div>
+    </div>
+
+    <div class="loading-spinner" id="loading">
+        <div class="spinner"></div>
     </div>
 
     <div class="video-list" id="video-list">
@@ -175,10 +245,25 @@
 
     <script>
         const API_URL = "http://127.0.0.1:5000";
+        let cargando = false;
         
         async function buscarVideos() {
+            if (cargando) return;
+            
             const query = document.getElementById("search").value;
-            const algoritmo = "algoritmo1";
+            const algoritmo = document.getElementById("algoritmo").value;
+            const searchInput = document.getElementById("search");
+            const searchButton = document.getElementById("buscar-btn");
+            const algoritmoSelect = document.getElementById("algoritmo");
+            const loadingSpinner = document.getElementById("loading");
+            
+            // Activar estado de carga
+            cargando = true;
+            searchInput.disabled = true;
+            searchButton.disabled = true;
+            algoritmoSelect.disabled = true;
+            loadingSpinner.classList.add("visible");
+            
             try {
                 const response = await fetch(`${API_URL}/buscar_videos/${algoritmo}?query=${encodeURIComponent(query)}`);
                 if (response.ok) {
@@ -194,6 +279,13 @@
                 }
             } catch (error) {
                 console.error("Error en la solicitud:", error);
+            } finally {
+                // Desactivar estado de carga
+                cargando = false;
+                searchInput.disabled = false;
+                searchButton.disabled = false;
+                algoritmoSelect.disabled = false;
+                loadingSpinner.classList.remove("visible");
             }
         }
 
@@ -205,9 +297,20 @@
                 return;
             }
             videos.forEach(video => {
+                let title = video.titulo;
+                //solo ddejar las letras
+                title = title.replace(/[^a-zA-Z ]/g, "");
+                //quitar espacios
+                title = title.replace(/\s/g, '');
+                //quitar acentos
+                title = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                //pasar a minusculas
+                title = title.toLowerCase();
                 contenedor.innerHTML += `
                     <div class="video-item">
-                        <div class="video-thumbnail">Vista previa</div>
+                        <div class="video-thumbnail">
+                            <img src="https://picsum.photos/seed/${title}/160/160" alt="${video.titulo}">    
+                        </div>
                         <div class="video-details">
                             <p class="video-title">${video.titulo}</p>
                             <p class="video-description">${video.descripcion}</p>
@@ -218,10 +321,35 @@
         }
 
         document.getElementById("search").addEventListener("keyup", function(event) {
-            if (event.key === "Enter") {
+            if (event.key === "Enter" && !cargando) {
                 buscarVideos();
             }
         });
+
+        window.onload = async function() {
+            await cargarPrimeraImpresion();
+        };
+
+        async function cargarPrimeraImpresion() {
+            try {
+                // Hacer fetch a la ruta /first_impression
+                const response = await fetch(`${API_URL}/first_impression`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.resultados) {
+                        mostrarVideos(data.resultados);
+                    } else {
+                        console.error("No se encontraron resultados.");
+                        mostrarVideos([]);
+                    }
+                } else {
+                    console.error("Error al obtener la primera impresión.");
+                }
+            } catch (error) {
+                console.error("Error en la solicitud de primera impresión:", error);
+            }
+        }
     </script>
 </body>
 </html>

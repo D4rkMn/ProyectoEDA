@@ -1,4 +1,4 @@
-#include "Metrics/DaviesBouldinStar.h"
+/* #include "Metrics/DaviesBouldinStar.h"
 #include <iostream>
 
 int main() {
@@ -44,4 +44,4 @@ int main() {
     std::cout << "Distancia entre medoides: " << div_distance(d1, d3) << std::endl;
 
     return 0;
-}
+} */
