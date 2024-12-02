@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <cmath>
-#include "../DataStructures/Data/Data.h"
+#include <functional>
+#include "DataStructures/Data/Data.h"
 
 template<typename T>
 class DiversityMetrics {

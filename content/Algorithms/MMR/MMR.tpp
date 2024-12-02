@@ -1,4 +1,5 @@
 #include "Algorithms/MMR/MMR.h"
+#include <iostream>
 #include <limits>
 
 template<typename T>
@@ -8,25 +9,27 @@ double MMR<T>::objective_function(const Data<T>& o_i, const Data<T>& o_q, std::v
     for (const auto& o_j: R) {
         sum += this->distance_div(o_i, o_j);
     }
-    result += 2 * lambda * sum;
+    result += lambda * sum;
     return result;
 }
 
 template<typename T>
 std::vector<Data<T>> MMR<T>::execute(size_t k, const Data<T>& o_q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
     std::vector<Data<T>> R;
+    std::vector<Data<T>> O_minus_R = O.getAllData();
     for (size_t i = 0; i < k; i++) {
         double max_score = std::numeric_limits<double>::min();
-        const Data<T>* max_data = nullptr;
-        for (const auto& o_i: O.getAllData()) {
+        size_t index = 0;
+        for (size_t j = 0; j < O_minus_R.size(); j++) {
+            const Data<T>& o_i = O_minus_R[j];
             double current_score = objective_function(o_i, o_q, R);
             if (current_score > max_score) {
                 max_score = current_score;
-                max_data = &o_i;
+                index = j;
             }
         }
-        if (max_data) R.push_back(*max_data);
-        else break;
+        R.push_back(O_minus_R[index]);
+        O_minus_R.erase(O_minus_R.begin() + index);
     }
     return R;
 }

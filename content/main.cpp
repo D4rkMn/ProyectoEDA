@@ -1,4 +1,10 @@
 #include <iostream>
+#include <cmath>
+#include <vector>
+#include <fstream>
+#include <filesystem>
+#include <sstream>
+
 #include "Algorithms/DFM/DFM.h"
 #include "Algorithms/BRID/BRID.h"
 #include "Algorithms/MMR/MMR.h"
@@ -7,11 +13,6 @@
 #include "DataStructures/Data/Data.h"
 #include "DataStructures/DataSet/DataSet.h"
 #include "DataStructures/Cluster/Cluster.h"
-#include <cmath>
-#include <vector>
-#include <fstream>
-#include <filesystem>
-#include <sstream>
 
 // Función para leer el archivo `query.txt`
 bool readQueryFile(const std::string& filePath, std::string& algorithmType, std::vector<double>& queryEmbedding, std::string& queryContent) {
@@ -39,7 +40,7 @@ bool readQueryFile(const std::string& filePath, std::string& algorithmType, std:
 // Función principal
 int main() {
     // Leer el archivo de datos y crear el dataset
-    std::ifstream file("nombres_embeddings_yt.txt");
+    std::ifstream file("frontend/nombres_embeddings_yt.txt");
     if (!file.is_open()) {
         std::cerr << "Error: No se pudo abrir el archivo nombres_embeddings_yt.txt" << std::endl;
         return 1;
@@ -64,31 +65,43 @@ int main() {
     std::string algorithmType, queryContent;
     std::vector<double> queryEmbedding;
 
-    if (!readQueryFile("query.txt", algorithmType, queryEmbedding, queryContent)) {
+    if (!readQueryFile("frontend/query.txt", algorithmType, queryEmbedding, queryContent)) {
         return 1;
     }
+
+    std::cout << "Iniciando query:\n";
 
     Data<std::string> query(queryContent, Point(queryEmbedding));
 
     // Seleccionar y ejecutar el algoritmo
+
+    // Distancia euclideana
     auto fn1 = [](const Data<std::string>& a, const Data<std::string>& b) {
         return static_cast<double>(a.getEmbedding().euclideanDistance(b.getEmbedding()));
+    };
+    // Similitud coseno
+    auto fn2 = [](const Data<std::string>& a, const Data<std::string>& b) {
+        return static_cast<double>(a.getEmbedding().cosineSimilarity(b.getEmbedding()));
+    };
+    // Distancia coseno
+    auto fn3 = [](const Data<std::string>& a, const Data<std::string>& b) {
+        return 1.0 - static_cast<double>(a.getEmbedding().cosineSimilarity(b.getEmbedding()));
     };
 
     std::vector<Cluster<std::string>> clusters;
     std::vector<Data<std::string>> result;
 
     if (algorithmType == "Motley") {
-        Motley<std::string> motley(fn1, fn1, 0.5);
+        Motley<std::string> motley(fn3, fn3, 0.3);
         result = motley.execute(10, query, dataset, clusters);
     } else if (algorithmType == "BRID") {
-        BRID<std::string> brid(fn1, fn1);
+        BRID<std::string> brid(fn3, fn3);
         result = brid.execute(10, query, dataset, clusters);
     } else if (algorithmType == "Swap") {
-        Swap<std::string> swap(fn1, fn1, 0.5);
+        Swap<std::string> swap(fn2, fn3, 0.25);
         result = swap.execute(10, query, dataset, clusters);
     } else if (algorithmType == "MMR") {
-        MMR<std::string> mmr(fn1, fn1, 0.5);
+        MMR<std::string> mmr(fn2, fn3, 0.25);
         result = mmr.execute(10, query, dataset, clusters);
     } else {
         std::cerr << "Error: Algoritmo desconocido: " << algorithmType << std::endl;

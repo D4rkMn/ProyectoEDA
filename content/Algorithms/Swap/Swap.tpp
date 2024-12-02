@@ -11,7 +11,7 @@ double Swap<T>::objective_function(const Data<T>& o_i, const Data<T>& o_q, std::
     for (const auto& o_j: R) {
         sum += this->distance_div(o_i, o_j);
     }
-    result += 2 * lambda * sum;
+    result += lambda * sum;
     return result;
 }
 
@@ -23,7 +23,7 @@ std::vector<Data<T>> Swap<T>::kNN(size_t k, const Data<T>& o_q, DataSet<T>& O) c
         R.push({inf, nullptr});
     }
     for (const auto& o_i: O.getAllData()) {
-        double current_distance = this->distance_sim(o_i, o_q);
+        double current_distance = this->distance_div(o_i, o_q);
         double max_distance = R.top().first;
         if (max_distance > current_distance) {
             std::pair<double, const Data<T>*> p = {current_distance, &o_i};
@@ -51,7 +51,7 @@ std::vector<Data<T>> Swap<T>::execute(size_t k, const Data<T>& o_q, DataSet<T>& 
     std::sort(O_minus_R.begin(), O_minus_R.end(), [this, o_q](const Data<T>& a, const Data<T>& b) -> bool {
         double d1 = this->distance_sim(o_q, a);
         double d2 = this->distance_sim(o_q, b);
-        return d1 < d2;
+        return d1 > d2;
     });
 
     // Swap procedure
