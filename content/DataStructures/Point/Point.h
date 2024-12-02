@@ -14,6 +14,7 @@ public:
     std::vector<double>& getCoordinates();
     const std::vector<double>& getCoordinates() const;
     double euclideanDistance(const Point& other) const;
+    double cosineSimilarity(const Point& other) const;
 };
 
 #endif

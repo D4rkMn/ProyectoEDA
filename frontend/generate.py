@@ -1,6 +1,19 @@
 from sentence_transformers import SentenceTransformer
 import random
 
+
+init = input("generar dataset de nombres? (s/n): ")
+
+if init == "n":
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    print("Modelo cargado")
+    nombre = input("Ingrese un nombre: ")
+    embedding = model.encode(nombre)
+    #imprimir separado por ;
+    print(";".join(map(str, embedding)))
+    exit()
+
+
 file = open("nombres_yt.txt", "r")
 
 nombres_generados = []

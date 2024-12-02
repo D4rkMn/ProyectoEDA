@@ -22,6 +22,7 @@ def cargar_datos(filename="nombres_embeddings_yt.txt"):
             else:
                 embedding = np.fromstring(line[1], sep=";")
                 #quitar el ultimo elemento que es un espacio
+                embedding = embedding[:-1]
                 embeddings.append(embedding)
     
     return nombres, embeddings

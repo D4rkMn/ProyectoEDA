@@ -8,6 +8,7 @@ std::vector<Data<T>> Motley<T>::execute(size_t k, const Data<T>& q, DataSet<T>& 
         return this->distance_sim(a, q) < this->distance_sim(b, q);
     });
 
+
     //inicializar conjunto Resultado
     std::vector<Data<T>> R;
     R.push_back(content[0]);
