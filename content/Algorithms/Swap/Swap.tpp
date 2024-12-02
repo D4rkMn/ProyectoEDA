@@ -6,12 +6,12 @@
 // Swap con MMR
 template<typename T>
 double Swap<T>::objective_function(const Data<T>& o_i, const Data<T>& o_q, std::vector<Data<T>>& R) const {
-    double result = (1 - lambda) * this->distance_sim(o_i, o_q);
+    double result = (1 - this->lambda) * this->distance_sim(o_i, o_q);
     double sum = 0;
     for (const auto& o_j: R) {
         sum += this->distance_div(o_i, o_j);
     }
-    result += lambda * sum;
+    result += this->lambda * sum;
     return result;
 }
 
