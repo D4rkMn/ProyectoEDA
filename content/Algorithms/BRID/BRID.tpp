@@ -2,7 +2,7 @@
 
 template<typename T>
 double BRID<T>::influence(const Data<T>& a, const Data<T>& b) {
-    double distance = this->distance_div(a, b);
+    double distance = this->distance(a, b);
 
     if (distance == 0) {
         return 1;
@@ -12,7 +12,7 @@ double BRID<T>::influence(const Data<T>& a, const Data<T>& b) {
 }
 
 template<typename T>
-std::vector<Data<T>> BRID<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
+std::vector<Data<T>> BRID<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C, DataSet<T>& querySet) {
     std::vector<Data<T>> R;
     std::set<size_t> usedIndices; 
     
@@ -41,7 +41,7 @@ std::vector<Data<T>> BRID<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O,
             
 
             if (isValid) {
-                double currentDistance = this->distance_div(q, o_i);
+                double currentDistance = this->distance(q, o_i);
                 //solo es candidato si es uno de los más cercanos
                 if (currentDistance < minDistance) {
                     minDistance = currentDistance;

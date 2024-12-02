@@ -1,11 +1,11 @@
 #include "Algorithms/Motley/Motley.h"
 
 template<typename T>
-std::vector<Data<T>> Motley<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
+std::vector<Data<T>> Motley<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C, DataSet<T>& querySet) {
     auto content = O.getAllData();
     //ordenar por similutud con q
     std::sort(content.begin(), content.end(), [&q, this](const Data<T>& a, const Data<T>& b) -> bool {
-        return this->distance_sim(a, q) < this->distance_sim(b, q);
+        return this->distance(a, q) < this->distance(b, q);
     });
 
 
@@ -17,7 +17,7 @@ std::vector<Data<T>> Motley<T>::execute(size_t k, const Data<T>& q, DataSet<T>& 
     for(size_t i=1; i<content.size(); i++){
         is_far = true;
         for(size_t j=0; j<R.size(); j++){
-            if(this->distance_sim(R[j], content[i]) < r){
+            if(this->distance(R[j], content[i]) < r){
                 is_far = false;
                 break;
             }
@@ -53,8 +53,8 @@ std::vector<Data<T>> Motley<T>::execute(size_t k, const Data<T>& q, DataSet<T>& 
                 cluster_index = j;
                 break;
             }
-            if(this->distance_sim(O.getData(i), C[j].getMedoid()) < min_distance){
-                min_distance = this->distance_sim(O.getData(i), C[j].getMedoid());
+            if(this->distance(O.getData(i), C[j].getMedoid()) < min_distance){
+                min_distance = this->distance(O.getData(i), C[j].getMedoid());
                 cluster_index = j;
             }
         }

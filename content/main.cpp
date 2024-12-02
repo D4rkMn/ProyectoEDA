@@ -88,21 +88,28 @@ int main() {
         return 1.0 - static_cast<double>(a.getEmbedding().cosineSimilarity(b.getEmbedding()));
     };
 
+    size_t query_size = 10;
+    DataSet<std::string> query_set;
     std::vector<Cluster<std::string>> clusters;
     std::vector<Data<std::string>> result;
 
     if (algorithmType == "Motley") {
-        Motley<std::string> motley(fn3, fn3, 0.3);
-        result = motley.execute(10, query, dataset, clusters);
+        double radius = 0.3;
+        Motley<std::string> motley(fn3, radius);
+        result = motley.execute(query_size, query, dataset, clusters, query_set);
     } else if (algorithmType == "BRID") {
-        BRID<std::string> brid(fn3, fn3);
-        result = brid.execute(10, query, dataset, clusters);
+        BRID<std::string> brid(fn3);
+        result = brid.execute(query_size, query, dataset, clusters, query_set);
     } else if (algorithmType == "Swap") {
-        Swap<std::string> swap(fn2, fn3, 0.25);
-        result = swap.execute(10, query, dataset, clusters);
+        double lambda = 0.5;
+        Swap<std::string> swap(fn2, fn3, lambda);
+        query_set = swap.calculate_query_set(dataset, query);
+        result = swap.execute(query_size, query, query_set, clusters);
     } else if (algorithmType == "MMR") {
-        MMR<std::string> mmr(fn2, fn3, 0.25);
-        result = mmr.execute(10, query, dataset, clusters);
+        double lambda = 0.5;
+        MMR<std::string> mmr(fn2, fn3, lambda);
+        query_set = mmr.calculate_query_set(dataset, query);
+        result = mmr.execute(query_size, query, query_set, clusters);
     } else {
         std::cerr << "Error: Algoritmo desconocido: " << algorithmType << std::endl;
         return 1;

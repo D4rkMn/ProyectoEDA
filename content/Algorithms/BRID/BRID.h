@@ -8,14 +8,13 @@
 #include <cstddef>
 
 template<typename T>
-class BRID : public Algorithm<T> {
+class BRID : public CoverageAlgorithm<T> {
 public:
-    BRID(std::function<double(const Data<T>&, const Data<T>&)> sim,
-        std::function<double(const Data<T>&, const Data<T>&)> div)
-        : Algorithm<T>(sim, div) {}
+    BRID(std::function<double(const Data<T>&, const Data<T>&)> dist)
+        : CoverageAlgorithm<T>(dist) {}
 
     double influence(const Data<T>& a, const Data<T>& b);
-    std::vector<Data<T>> execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C) override;
+    std::vector<Data<T>> execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C, DataSet<T>& querySet) override;
 };
 
 #include "Algorithms/BRID/BRID.tpp"
