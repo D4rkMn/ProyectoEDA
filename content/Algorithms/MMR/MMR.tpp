@@ -1,4 +1,5 @@
 #include "Algorithms/MMR/MMR.h"
+#include <unordered_set>
 #include <iostream>
 #include <limits>
 
@@ -16,20 +17,44 @@ double MMR<T>::objective_function(const Data<T>& o_i, const Data<T>& o_q, std::v
 template<typename T>
 std::vector<Data<T>> MMR<T>::execute(size_t k, const Data<T>& o_q, DataSet<T>& O, std::vector<Cluster<T>>& C) {
     std::vector<Data<T>> R;
-    std::vector<Data<T>> O_minus_R = O.getAllData();
+
+    std::unordered_set<size_t> taken;
     for (size_t i = 0; i < k; i++) {
         double max_score = std::numeric_limits<double>::min();
         size_t index = 0;
-        for (size_t j = 0; j < O_minus_R.size(); j++) {
-            const Data<T>& o_i = O_minus_R[j];
+        for (size_t j = 0; j < O.getAllData().size(); j++) {
+            // if element already taken, skip
+            if (taken.find(j) != taken.end()) continue;
+
+            const Data<T>& o_i = O.getData(j);
             double current_score = objective_function(o_i, o_q, R);
             if (current_score > max_score) {
                 max_score = current_score;
                 index = j;
             }
         }
-        R.push_back(O_minus_R[index]);
-        O_minus_R.erase(O_minus_R.begin() + index);
+        R.push_back(O.getData(index));
+        taken.insert(index);
+    }
+
+    // create clusters with elements from R as medoids
+    for (size_t i = 0; i < R.size(); i++) {
+        C.emplace_back();
+        C.back().setMedoid(R[i]);
+    }
+
+    // for each element in O', assign to a medoid
+    for (size_t i = 0; i < O.getAllData().size(); i++) {
+        double min_distance = std::numeric_limits<double>::max();
+        size_t index = 0;
+        for (size_t j = 0; j < R.size(); j++) {
+            double current_distance = this->distance_div(R[j], O.getAllData()[i]);
+            if (min_distance > current_distance) {
+                min_distance = current_distance;
+                index = j;
+            }
+        }
+        C[index].addData(O.getAllData()[i]);
     }
     return R;
 }

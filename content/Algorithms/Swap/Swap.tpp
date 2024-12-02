@@ -81,5 +81,25 @@ std::vector<Data<T>> Swap<T>::execute(size_t k, const Data<T>& o_q, DataSet<T>& 
             }
         }
     }
+
+    // create clusters with elements from R as medoids
+    for (size_t i = 0; i < R.size(); i++) {
+        C.emplace_back();
+        C.back().setMedoid(R[i]);
+    }
+
+    // for each element in O', assign to a medoid
+    for (size_t i = 0; i < O.getAllData().size(); i++) {
+        double min_distance = std::numeric_limits<double>::max();
+        size_t index = 0;
+        for (size_t j = 0; j < R.size(); j++) {
+            double current_distance = this->distance_div(R[j], O.getAllData()[i]);
+            if (min_distance > current_distance) {
+                min_distance = current_distance;
+                index = j;
+            }
+        }
+        C[index].addData(O.getAllData()[i]);
+    }
     return R;
 }

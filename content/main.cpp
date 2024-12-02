@@ -116,9 +116,16 @@ int main() {
     }
 
     // Mostrar resultados en la consola
-    std::cout << "Resultados para la consulta: " << queryContent << std::endl;
+    std::cout << "Resultados para la consulta: " << queryContent << std::endl << std::endl;
     for (const auto& data : result) {
         std::cout << data.getContent() << std::endl;
+    }
+
+    size_t cluster_sample_index = 0;
+    std::cout << "\nData del cluster " << cluster_sample_index << ":\n\n";
+    std::cout << "Medoide: " << clusters[cluster_sample_index].getMedoid().getContent() << "\n";
+    for (const auto& data : clusters[cluster_sample_index].getAllData()) {
+        std::cout << data.getContent() << "\n";
     }
 
     return 0;
