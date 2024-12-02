@@ -7,7 +7,7 @@ Este proyecto implementa una métrica para la clasificación de resultados de b�
 - Melisa Rivera
 - Cesar Perales
 - Alejandro Oré
-- Alexandra
+- Alexandra Shulca
 
 ## Estructura del Proyecto
 ```
