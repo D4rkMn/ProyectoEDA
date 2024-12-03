@@ -23,7 +23,7 @@ public:
         std::function<double(const Data<T>&, const Data<T>&)> div) {
         distance_sim = sim;
         distance_div = div;
-        answer.reserve(7);
+        answer.resize(7);
         }
 
     void initialize(std::vector<Data<T>>& R, DataSet<T>& O, 

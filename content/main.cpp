@@ -121,17 +121,16 @@ int main() {
         std::cout << data.getContent() << std::endl;
     }
 
-    size_t cluster_sample_index = 0;
-    std::cout << "\nData del cluster " << cluster_sample_index << ":\n\n";
-    std::cout << "Medoide: " << clusters[cluster_sample_index].getMedoid().getContent() << "\n";
-    for (const auto& data : clusters[cluster_sample_index].getAllData()) {
-        std::cout << data.getContent() << "\n";
-    }
+    DFM<std::string> dfm(fn3, fn3);
+    dfm.initialize(result, query_set, clusters, query);
+    std::vector<double> score = dfm.execute();
 
-    std::cout << "\nQuery set size: " << query_set.size() << "\n";
-    for (const auto& data: query_set.getAllData()) {
-        std::cout << data.getContent() << "\n";
+    std::cout << "\nDFM Score:\n{ ";
+    for (size_t i = 0; i < score.size(); i++) {
+        if (i != 0) std::cout << ", ";
+        std::cout << score[i] << " ";
     }
+    std::cout << "}\n";
 
     return 0;
 }
