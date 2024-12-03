@@ -12,7 +12,9 @@ double BRID<T>::influence(const Data<T>& a, const Data<T>& b) {
 }
 
 template<typename T>
-std::vector<Data<T>> BRID<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C, DataSet<T>& querySet) {
+std::vector<Data<T>> BRID<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O,
+std::vector<Cluster<T>>& C, DataSet<T>& query_set) {
+    
     std::vector<Data<T>> R;
     std::set<size_t> usedIndices; 
     
@@ -59,6 +61,27 @@ std::vector<Data<T>> BRID<T>::execute(size_t k, const Data<T>& q, DataSet<T>& O,
             break;
         }
     }
-    
+
+    usedIndices.clear();
+    // Crear clusters con elementos de R como medoids
+    for (size_t i = 0; i < R.size(); i++) {
+        C.emplace_back();
+        C.back().setMedoid(R[i]);
+
+        for (size_t j = 0; j < O.size(); j++) {
+            // Skip si ya usamos este índice
+            if (usedIndices.find(j) != usedIndices.end()) {
+                continue;
+            }
+
+            // Si está en strong influence del medoid entonces lo añadimos al cluster
+            if (influence(R[i], O.getData(j)) >= influence(R[i], q) &&
+                influence(O.getData(j), R[i]) >= influence(O.getData(j), q)) {
+                C.back().addData(O.getData(j));
+                query_set.addData(O.getData(j));
+                usedIndices.insert(j);
+            }
+        }
+    }
     return R;
 }

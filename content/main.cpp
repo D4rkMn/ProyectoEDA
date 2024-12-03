@@ -128,5 +128,10 @@ int main() {
         std::cout << data.getContent() << "\n";
     }
 
+    std::cout << "\nQuery set size: " << query_set.size() << "\n";
+    for (const auto& data: query_set.getAllData()) {
+        std::cout << data.getContent() << "\n";
+    }
+
     return 0;
 }

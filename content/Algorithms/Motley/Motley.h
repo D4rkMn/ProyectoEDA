@@ -14,7 +14,8 @@ public:
             double r = 0.5f) 
         : CoverageAlgorithm<T>(dist), r(r) {}
 
-    std::vector<Data<T>> execute(size_t k, const Data<T>& q, DataSet<T>& O, std::vector<Cluster<T>>& C, DataSet<T>& querySet) override;
+    std::vector<Data<T>> execute(size_t k, const Data<T>& q, DataSet<T>& O,
+                std::vector<Cluster<T>>& C, DataSet<T>& query_set) override;
 };
 
 #include "Algorithms/Motley/Motley.tpp"
