@@ -6,30 +6,73 @@ Este proyecto implementa una métrica para la clasificación de resultados de b�
 ## Integrantes del Equipo
 - Melisa Rivera
 - Cesar Perales
-- Alejandro Oré
+- Alejandro Ore
 - Alexandra Shulca
 
 ## Estructura del Proyecto
 ```
 .
-├── content/
-│   ├── Point.h
-│   ├── Data.h
-│   ├── DataSet.h
-│   ├── Cluster.h
-│   ├── Algorithm.h
-│   ├── DFM.h
-│   ├── Motley.h
-│   ├── BRID.h
-│   ├── Swap.h
-│   └── MMR.h
-│   ├── Point.cpp
-│   ├── Data.cpp
-│   ├── DataSet.cpp
-│   ├── Cluster.cpp
-│   └── Algorithm.cpp
+├── content
+│   ├── Algorithms
+│   │   ├── Algorithm.h
+│   │   ├── Algorithm.tpp
+│   │   ├── BRID
+│   │   │   ├── BRID.h
+│   │   │   └── BRID.tpp
+│   │   ├── DFM
+│   │   │   ├── DFM.h
+│   │   │   └── DFM.tpp
+│   │   ├── MMR
+│   │   │   ├── MMR.h
+│   │   │   └── MMR.tpp
+│   │   ├── Motley
+│   │   │   ├── Motley.h
+│   │   │   └── Motley.tpp
+│   │   └── Swap
+│   │       ├── Swap.h
+│   │       └── Swap.tpp
+│   ├── DataStructures
+│   │   ├── Cluster
+│   │   │   ├── Cluster.h
+│   │   │   └── Cluster.tpp
+│   │   ├── Data
+│   │   │   └── Data.h
+│   │   ├── DataSet
+│   │   │   ├── DataSet.h
+│   │   │   └── DataSet.tpp
+│   │   └── Point
+│   │       ├── Point.cpp
+│   │       └── Point.h
+│   ├── Metrics
+│   │   ├── DaviesBouldinStar.h
+│   │   └── DiversityMetrics.h
+│   └── Visualization2D
+│       ├── CanvasPoint
+│       │   └── CanvasPoint.h
+│       ├── WindowContent
+│       │   ├── ProcessQuery.cpp
+│       │   ├── WindowContent.cpp
+│       │   └── WindowContent.h
+│       └── WindowHandler
+│           ├── Events.cpp
+│           ├── WindowHandler.cpp
+│           └── WindowHandler.h
+├── frontend
+│   ├── app.py
+│   ├── csv_to_titles.py
+│   ├── DFM
+│   ├── generate.py
+│   ├── index.html
+│   ├── Last.fm_data.csv
+│   └── nombres_yt.txt
+├── DFM
+├── main.cpp
+├── Visualization
+├── visuals.cpp
+├── requeriments.txt
+├── Makefile
 ├── README.md
-└── .gitignore
+├── .gitignore
 ```
 
 ## Características Principales
@@ -38,6 +81,7 @@ Este proyecto implementa una métrica para la clasificación de resultados de b�
 - Métricas de evaluación incorporadas
 - Soporte para diferentes tipos de datos
 - Arquitectura extensible para nuevos algoritmos
+- Dos tipos de visualizaciones (baja y alta dimensionalidad)
 
 ## Clases Principales
 
@@ -63,8 +107,16 @@ Representa un cluster de elementos.
 
 ### Algorithm
 Clase base abstracta para todos los algoritmos.
-- Funciones de distancia configurables
 - Interface común para ejecución
+
+### NoveltyAlgorithm
+Clase base abstracta para los algoritmos de novelty.
+- Funciones de distancia de similitud y diversificación
+- 'Lambda' para configurar la relevancia de cada parámetro
+
+### CoverageAlgorithm
+Clase base abstracta para los algoritmos de coverage.
+- Funcion de distancia configurable
 
 ## Algoritmos Implementados
 
@@ -94,7 +146,8 @@ Clase base abstracta para todos los algoritmos.
 - Balance configurable entre relevancia y diversidad
 
 ## Requisitos del Sistema
-- C++17 o superior
+- C++17 o superior (con SDL2 para compilar 'visuals')
+- Python (instalar requirements.txt)
 - Compilador compatible (GCC, Clang, MSVC)
 
 ## Uso Básico
@@ -124,9 +177,6 @@ dfm.execute();
 
 
 ## TO-DOs
-- [ ] Implementar validación de parámetros en todos los algoritmos
-- [ ] Agregar tests unitarios
-- [ ] Optimizar rendimiento de operaciones críticas
-- [ ] Documentar casos de uso específicos
-- [ ] Agregar ejemplos de implementación
+- [X] Documentar casos de uso específicos
+- [X] Agregar ejemplos de implementación
 - [X] Agregar visualización de resultados
