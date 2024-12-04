@@ -105,11 +105,12 @@ void ConcreteContent::processQuery(SDL_Renderer* renderer) {
         for (size_t i = 0; i < query_set.size(); i++) {
             maxRad = std::max(maxRad, fn1(query, query_set.getData(i)));
         }
-        circles.push_back({queryPoint->toPoint(), (int)maxRad + queryPoint->size});
+        circles.push_back({queryPoint->toPoint(), (int)maxRad + queryPoint->size/2});
     }
     else if (_motley) {
         for (size_t i = 0; i < clusters.size(); i++) {
-            circles.push_back({clusters[i].getMedoid().getContent()->toPoint(), (int)motleyRad + clusters[i].getMedoid().getContent()->size});
+            CanvasPoint* medoid = clusters[i].getMedoid().getContent();
+            circles.push_back({medoid->toPoint(), (int)motleyRad + medoid->size/2});
         }
     }
     else {
@@ -120,7 +121,7 @@ void ConcreteContent::processQuery(SDL_Renderer* renderer) {
                 auto p = clusters[i].getData(j);
                 maxRad = std::max(maxRad, fn1(medoid, p));
             }
-            circles.push_back({medoid.getContent()->toPoint(), (int)maxRad + medoid.getContent()->size});
+            circles.push_back({medoid.getContent()->toPoint(), (int)maxRad + medoid.getContent()->size/2});
         }
     }
 
