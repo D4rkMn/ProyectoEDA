@@ -40,7 +40,7 @@ bool readQueryFile(const std::string& filePath, std::string& algorithmType, std:
 // Función principal
 int main() {
     // Leer el archivo de datos y crear el dataset
-    std::ifstream file("frontend/nombres_embeddings_yt.txt");
+    std::ifstream file("nombres_embeddings_yt.txt");
     if (!file.is_open()) {
         std::cerr << "Error: No se pudo abrir el archivo nombres_embeddings_yt.txt" << std::endl;
         return 1;
@@ -65,7 +65,7 @@ int main() {
     std::string algorithmType, queryContent;
     std::vector<double> queryEmbedding;
 
-    if (!readQueryFile("frontend/query.txt", algorithmType, queryEmbedding, queryContent)) {
+    if (!readQueryFile("query.txt", algorithmType, queryEmbedding, queryContent)) {
         return 1;
     }
 
@@ -125,12 +125,12 @@ int main() {
     dfm.initialize(result, query_set, clusters, query);
     std::vector<double> score = dfm.execute();
 
-    std::cout << "\nDFM Score:\n{ ";
+    std::cout << "\nDFM Score:\n";
     for (size_t i = 0; i < score.size(); i++) {
-        if (i != 0) std::cout << ", ";
-        std::cout << score[i] << " ";
+        if (i != 0) std::cout << ";";
+        std::cout << score[i];
     }
-    std::cout << "}\n";
+    std::cout << "\n";
 
     return 0;
 }

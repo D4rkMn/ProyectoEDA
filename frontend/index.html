@@ -1,312 +1,442 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Diversify</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            min-height: 100vh;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        background-color: #121212;
+        color: #ffffff;
+        min-height: 100vh;
+      }
 
+      .header {
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 16px 24px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .header h1 {
+        font-size: 24px;
+        color: #1db954;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 0 1 400px;
+      }
+
+      .search-bar input[type="text"] {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 20px;
+        border: none;
+        background-color: #242424;
+        color: #ffffff;
+        font-size: 14px;
+        transition: background-color 0.2s;
+      }
+
+      .search-bar input[type="text"]:focus {
+        outline: none;
+        background-color: #2a2a2a;
+      }
+
+      .search-bar input[type="text"]::placeholder {
+        color: #a7a7a7;
+      }
+
+      .search-bar select {
+        padding: 12px 16px;
+        border-radius: 20px;
+        border: none;
+        background-color: #242424;
+        color: #ffffff;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .search-bar select:focus {
+        outline: none;
+        background-color: #2a2a2a;
+      }
+
+      .search-bar button {
+        background-color: #1db954;
+        color: black;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.2s;
+      }
+
+      .search-bar button:not(:disabled):hover {
+        background-color: #1ed760;
+        transform: scale(1.04);
+      }
+
+      .search-bar button:disabled {
+        background-color: #1a1a1a;
+        color: #404040;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .video-list {
+        padding: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        gap: 16px;
+      }
+
+      .video-item {
+        background-color: #181818;
+        border-radius: 8px;
+        padding: 16px;
+        display: flex;
+        gap: 16px;
+        transition: background-color 0.3s;
+      }
+
+      .video-item:hover {
+        background-color: #282828;
+      }
+
+      .video-thumbnail {
+        overflow: hidden;
+        width: 160px;
+        height: 90px;
+        background-color: #282828;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a7a7a7;
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+
+      .video-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .video-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+        cursor: pointer;
+      }
+
+      .video-title:hover {
+        text-decoration: underline;
+      }
+
+      .video-description {
+        font-size: 14px;
+        color: #a7a7a7;
+        line-height: 1.5;
+      }
+
+      .loading-spinner {
+        display: none;
+        justify-content: center;
+        padding: 40px;
+      }
+
+      .loading-spinner.visible {
+        display: flex;
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #242424;
+        border-top: 4px solid #1db954;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
         .header {
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 16px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            color: #1DB954;
-            font-weight: 700;
-            letter-spacing: -0.04em;
+          flex-direction: row;
+          gap: 16px;
+          height: 200px;
+          padding: 16px;
         }
 
         .search-bar {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 0 1 400px;
-        }
-
-        .search-bar input[type="text"] {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 20px;
-            border: none;
-            background-color: #242424;
-            color: #ffffff;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-
-        .search-bar input[type="text"]:focus {
-            outline: none;
-            background-color: #2a2a2a;
-        }
-
-        .search-bar input[type="text"]::placeholder {
-            color: #a7a7a7;
+          width: 100%;
+          flex-wrap: wrap;
         }
 
         .search-bar select {
-            padding: 12px 16px;
-            border-radius: 20px;
-            border: none;
-            background-color: #242424;
-            color: #ffffff;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .search-bar select:focus {
-            outline: none;
-            background-color: #2a2a2a;
+          flex: 1;
+          min-width: 120px;
         }
 
         .search-bar button {
-            background-color: #1DB954;
-            color: black;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .search-bar button:not(:disabled):hover {
-            background-color: #1ed760;
-            transform: scale(1.04);
-        }
-
-        .search-bar button:disabled {
-            background-color: #1a1a1a;
-            color: #404040;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .video-list {
-            padding: 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            gap: 16px;
+          width: 100%;
         }
 
         .video-item {
-            background-color: #181818;
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            gap: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .video-item:hover {
-            background-color: #282828;
+          flex-direction: column;
         }
 
         .video-thumbnail {
-            overflow: hidden;
-            width: 160px;
-            height: 90px;
-            background-color: #282828;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #a7a7a7;
-            font-size: 12px;
-            flex-shrink: 0;
+          width: 100%;
+          height: 200px;
         }
+      }
 
-        .video-details {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+      .metrics-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 400px;
+        background-color: #181818;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+      }
 
-        .video-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0;
-            cursor: pointer;
-        }
+      .metrics-panel.open {
+        transform: translateX(0);
+      }
 
-        .video-title:hover {
-            text-decoration: underline;
-        }
+      .metrics-toggle {
+        position: absolute;
+        left: -48px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #181818;
+        border: none;
+        padding: 12px;
+        border-radius: 8px 0 0 8px;
+        cursor: pointer;
+        color: #1db954;
+        transition: background-color 0.2s;
+      }
 
-        .video-description {
-            font-size: 14px;
-            color: #a7a7a7;
-            line-height: 1.5;
-        }
+      .metrics-toggle:hover {
+        background-color: #282828;
+      }
 
-        .loading-spinner {
-            display: none;
-            justify-content: center;
-            padding: 40px;
-        }
+      .chart-container {
+        padding: 24px;
+        height: calc(100% - 60px);
+      }
 
-        .loading-spinner.visible {
-            display: flex;
-        }
+      .chart-type-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding: 20px;
+      }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #242424;
-            border-top: 4px solid #1DB954;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+      .chart-type-button {
+        background-color: #282828;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+      .chart-type-button.active {
+        background-color: #1db954;
+      }
 
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: row;
-                gap: 16px;
-                height: 200px;
-                padding: 16px;
-            }
-
-            .search-bar {
-                width: 100%;
-                flex-wrap: wrap;
-            }
-
-            .search-bar select {
-                flex: 1;
-                min-width: 120px;
-            }
-
-            .search-bar button {
-                width: 100%;
-            }
-
-            .video-item {
-                flex-direction: column;
-            }
-
-            .video-thumbnail {
-                width: 100%;
-                height: 200px;
-            }
-        }
+      .chart-wrapper {
+        background-color: #282828;
+        padding: 20px;
+        border-radius: 8px;
+        height: calc(100% - 100px);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header">
-        <h1>Diversify</h1>
-        <div class="search-bar">
-            <input type="text" id="search" placeholder="¿Qué quieres ver?">
-            <select id="algoritmo">
-                <option value="Motley">Motley</option>
-                <option value="BRID">BRID</option>
-                <option value="Swap">Swap</option>
-                <option value="MMR">MMR</option>
-                <option value="Mock-KNN">Mock-KNN</option>
-            </select>
-            <button id="buscar-btn" onclick="buscarVideos()">Buscar</button>
-        </div>
+      <h1>Diversify</h1>
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="¿Qué quieres ver?" />
+        <select id="algoritmo">
+          <option value="Motley">Motley</option>
+          <option value="BRID">BRID</option>
+          <option value="Swap">Swap</option>
+          <option value="MMR">MMR</option>
+          <option value="Mock-KNN">Mock-KNN</option>
+        </select>
+        <button type="button" id="buscar-btn" onclick="buscarVideos()">
+          Buscar
+        </button>
+      </div>
     </div>
 
     <div class="loading-spinner" id="loading">
-        <div class="spinner"></div>
+      <div class="spinner"></div>
     </div>
 
     <div class="video-list" id="video-list">
-        <!-- Los videos se mostrarán aquí -->
+      <!-- Los videos se mostrarán aquí -->
     </div>
 
+    <!-- Panel de métricas -->
+    <div class="metrics-panel" id="metricsPanel">
+      <button class="metrics-toggle" onclick="toggleMetricsPanel()">📊</button>
+      <div class="chart-container">
+        <div class="chart-type-buttons">
+          <button
+            class="chart-type-button active"
+            onclick="switchChartType('radar')"
+          >
+            Radar
+          </button>
+          <button class="chart-type-button" onclick="switchChartType('bar')">
+            Barras
+          </button>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="metricsChart"></canvas>
+        </div>
+      </div>
+    </div>
     <script>
-        const API_URL = "http://127.0.0.1:5000";
-        let cargando = false;
-        
-        async function buscarVideos() {
-            if (cargando) return;
-            
-            const query = document.getElementById("search").value;
-            const algoritmo = document.getElementById("algoritmo").value;
-            const searchInput = document.getElementById("search");
-            const searchButton = document.getElementById("buscar-btn");
-            const algoritmoSelect = document.getElementById("algoritmo");
-            const loadingSpinner = document.getElementById("loading");
-            
-            // Activar estado de carga
-            cargando = true;
-            searchInput.disabled = true;
-            searchButton.disabled = true;
-            algoritmoSelect.disabled = true;
-            loadingSpinner.classList.add("visible");
-            
-            try {
-                const response = await fetch(`${API_URL}/buscar_videos/${algoritmo}?query=${encodeURIComponent(query)}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.resultados) {
-                        mostrarVideos(data.resultados);
-                    } else {
-                        console.error("No se encontraron resultados.");
-                        mostrarVideos([]);
-                    }
-                } else {
-                    console.error("Error al obtener videos");
-                }
-            } catch (error) {
-                console.error("Error en la solicitud:", error);
-            } finally {
-                // Desactivar estado de carga
-                cargando = false;
-                searchInput.disabled = false;
-                searchButton.disabled = false;
-                algoritmoSelect.disabled = false;
-                loadingSpinner.classList.remove("visible");
-            }
-        }
+      const API_URL = "http://127.0.0.1:5000";
+      let cargando = false;
+      let dfm_values = [0, 0, 0, 0, 0, 0, 0];
 
-        function mostrarVideos(videos) {
-            const contenedor = document.getElementById("video-list");
-            contenedor.innerHTML = "";
-            if (videos.length === 0) {
-                contenedor.innerHTML = "<p style='text-align: center; color: #a7a7a7; padding: 40px;'>No se encontraron videos.</p>";
-                return;
+      async function buscarVideos() {
+        if (cargando) return;
+
+        try {
+          const query = document.getElementById("search").value;
+          const algoritmo = document.getElementById("algoritmo").value;
+          const searchInput = document.getElementById("search");
+          const searchButton = document.getElementById("buscar-btn");
+          const algoritmoSelect = document.getElementById("algoritmo");
+          const loadingSpinner = document.getElementById("loading");
+          const contenedor = document.getElementById("video-list");
+
+          // Activar estado de carga
+          cargando = true;
+          searchInput.disabled = true;
+          searchButton.disabled = true;
+          algoritmoSelect.disabled = true;
+          loadingSpinner.classList.add("visible");
+
+          contenedor.innerHTML = "";
+
+          const query_url = `${API_URL}/buscar_videos/${algoritmo}?query=${encodeURIComponent(
+            query
+          )}`;
+
+          const response = await fetch(query_url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+
+          if (data.resultados) {
+            mostrarVideos(data.resultados);
+          } else {
+            console.error("No se encontraron resultados.");
+            mostrarVideos([]);
+          }
+
+          if (data.dfm) {
+            dfm_values = data.dfm;
+
+            //verificar con un for cada elemento de la lista por si se sale de los rangos permitidos
+            
+            for (let i = 0; i < dfm_values.length; i++) {
+              if (dfm_values[i] < 0) {
+                dfm_values[i] = 0;
+              }
+              if (dfm_values[i] > 1) {
+                dfm_values[i] = 1;
+              }
             }
-            videos.forEach(video => {
-                let title = video.titulo;
-                //solo ddejar las letras
-                title = title.replace(/[^a-zA-Z ]/g, "");
-                //quitar espacios
-                title = title.replace(/\s/g, '');
-                //quitar acentos
-                title = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                //pasar a minusculas
-                title = title.toLowerCase();
-                contenedor.innerHTML += `
+
+            createChart(data.dfm);
+          } else {
+            console.error("No se encontraron métricas.");
+          }
+        } catch (error) {
+          console.error("Error en la búsqueda:", error);
+          mostrarVideos([]); // Mostrar lista vacía en caso de error
+        } finally {
+          // Desactivar estado de carga
+          cargando = false;
+          document.getElementById("search").disabled = false;
+          document.getElementById("buscar-btn").disabled = false;
+          document.getElementById("algoritmo").disabled = false;
+          document.getElementById("loading").classList.remove("visible");
+        }
+      }
+
+      function mostrarVideos(videos) {
+        const contenedor = document.getElementById("video-list");
+        contenedor.innerHTML = "";
+        if (videos.length === 0) {
+          contenedor.innerHTML =
+            "<p style='text-align: center; color: #a7a7a7; padding: 40px;'>No se encontraron videos.</p>";
+          return;
+        }
+        videos.forEach((video) => {
+          let title = video.titulo;
+          //solo ddejar las letras
+          title = title.replace(/[^a-zA-Z ]/g, "");
+          //quitar espacios
+          title = title.replace(/\s/g, "");
+          //quitar acentos
+          title = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          //pasar a minusculas
+          title = title.toLowerCase();
+          contenedor.innerHTML += `
                     <div class="video-item">
                         <div class="video-thumbnail">
                             <img src="https://picsum.photos/seed/${title}/160/160" alt="${video.titulo}">    
@@ -317,39 +447,197 @@
                         </div>
                     </div>
                 `;
-            });
-        }
+        });
+      }
 
-        document.getElementById("search").addEventListener("keyup", function(event) {
-            if (event.key === "Enter" && !cargando) {
-                buscarVideos();
-            }
+      document
+        .getElementById("search")
+        .addEventListener("keyup", function (event) {
+          if (event.key === "Enter" && !cargando) {
+            event.preventDefault(); // Previene la recarga
+            buscarVideos();
+          }
         });
 
-        window.onload = async function() {
-            await cargarPrimeraImpresion();
-        };
+      async function cargarPrimeraImpresion() {
+        try {
+          // Hacer fetch a la ruta /first_impression
+          const response = await fetch(`${API_URL}/first_impression`);
 
-        async function cargarPrimeraImpresion() {
-            try {
-                // Hacer fetch a la ruta /first_impression
-                const response = await fetch(`${API_URL}/first_impression`);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.resultados) {
-                        mostrarVideos(data.resultados);
-                    } else {
-                        console.error("No se encontraron resultados.");
-                        mostrarVideos([]);
-                    }
-                } else {
-                    console.error("Error al obtener la primera impresión.");
-                }
-            } catch (error) {
-                console.error("Error en la solicitud de primera impresión:", error);
+          if (response.ok) {
+            const data = await response.json();
+            if (data.resultados) {
+              mostrarVideos(data.resultados);
+            } else {
+              console.error("No se encontraron resultados.");
+              mostrarVideos([]);
             }
+          } else {
+            console.error("Error al obtener la primera impresión.");
+          }
+        } catch (error) {
+          console.error("Error en la solicitud de primera impresión:", error);
         }
+      }
+
+      let currentChart = null;
+      let currentChartType = "radar";
+
+      function toggleMetricsPanel() {
+        const panel = document.getElementById("metricsPanel");
+        panel.classList.toggle("open");
+      }
+      function createChart(data) {
+        if (currentChart) {
+          currentChart.destroy();
+        }
+
+        const ctx = document.getElementById("metricsChart").getContext("2d");
+        const labels = [
+          "Dunn*",
+          "DB*",
+          "Sil*",
+          "Sigma-sim",
+          "Sigma-div",
+          "U-sim",
+          "U-div",
+        ];
+        let values = data || [0, 0, 0, 0, 0, 0, 0];
+
+        if (currentChartType === "radar") {
+          // Configuración para el gráfico de radar
+          values = values.map((value) => Math.log(value));
+
+          const config = {
+            type: "radar",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  data: values,
+                  backgroundColor: "rgba(29, 185, 84, 0.5)",
+                  borderColor: "#1DB954",
+                  borderWidth: 2,
+                  pointBackgroundColor: "#1DB954",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      return context.raw.toFixed(6);
+                    },
+                  },
+                },
+              },
+              scales: {
+                r: {
+                  beginAtZero: true,
+                  grid: {
+                    color: "#282828",
+                  },
+                  max: Math.max(...values) * 1.1,
+                  ticks: {
+                    display: false,
+                  },
+                  pointLabels: {
+                    color: "#ffffff",
+                    font: {
+                      size: 11,
+                    },
+                  },
+                  angleLines: {
+                    color: "#282828",
+                  },
+                },
+              },
+            },
+          };
+
+          currentChart = new Chart(ctx, config);
+        } else {
+          // Configuración para el gráfico de barras horizontales
+          const config = {
+            type: "bar",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  data: values,
+                  backgroundColor: "rgba(29, 185, 84, 0.7)",
+                  borderColor: "#1DB954",
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              indexAxis: "y", // Esto hace que las barras sean horizontales
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      return context.raw.toFixed(6);
+                    },
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  beginAtZero: true,
+                  grid: {
+                    color: "#282828",
+                  },
+                  ticks: {
+                    color: "#ffffff",
+                    callback: function (value) {
+                      return value.toFixed(3);
+                    },
+                  },
+                },
+                y: {
+                  grid: {
+                    display: false,
+                  },
+                  ticks: {
+                    color: "#ffffff",
+                    font: {
+                      size: 12,
+                    },
+                  },
+                },
+              },
+            },
+          };
+
+          currentChart = new Chart(ctx, config);
+        }
+      }
+
+      // También necesitamos modificar la función switchChartType para que actualice el gráfico
+      function switchChartType(type) {
+        currentChartType = type;
+        const buttons = document.querySelectorAll(".chart-type-button");
+        buttons.forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+        createChart(dfm_values);
+      }
+      // Inicializar el gráfico al cargar la página
+      window.onload = async function () {
+        await cargarPrimeraImpresion();
+        createChart(dfm_values);
+      };
     </script>
-</body>
+  </body>
 </html>

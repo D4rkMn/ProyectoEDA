@@ -34,7 +34,7 @@ def buscar_videos_mock(algoritmo, query, nombres, embeddings):
     distancias = [(nombres[i], cosine(embedding_query, emb)) for i, emb in enumerate(embeddings)]
     distancias.sort(key=lambda x: x[1])
     resultados = [{"titulo": nombre, "distancia": distancia} for nombre, distancia in distancias[:30]]
-    return resultados
+    return resultados, [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
 
 # Buscar videos con el programa C++
@@ -60,14 +60,39 @@ def buscar_videos_cpp(algoritmo, query):
         if result.returncode != 0:
             print(f"Error al ejecutar el programa C++: {result.stderr}")
             return []
+        
+        # Ejemplo de salida esperada:
+
+        """    
+        Iniciando query:
+        Resultados para la consulta: shakira
+
+        Clandestino - Shakira
+        The Answer - Britney Spears
+        Abrace Sua Sombra - Fresno
+        She Don't Dance - Everyone You Know
+        Waka Waka (This Time for Africa) [The Official 2010 FIFA World Cup (TM) Song] (feat. Freshlyground) - Shakira
+        Perfect Duet (with Beyonce) - Ed Sheeran
+        Notorious - Malaa
+        Keiki - Shida Shahabi
+        Doesn't Really Matter - Janet Jackson
+        Salsa Nuestra - Kaoma
+
+        DFM Score:
+        0.00443608;2.73244;0.377897;0.105202;0.105202;0.684472;0.684472
+        """
 
         # Leer resultados desde la consola
         output_lines = result.stdout.strip().split("\n")
 
-        # quitar la primera linea que dice "resultados"
-        output_lines = output_lines[1:]
+        # quitar las primeras tres líneas que dicen "Iniciando query", "Resultados para la consulta" y el saltos de línea
+        output_lines = output_lines[3:]
 
-        return [{"titulo": line} for line in output_lines]
+        # separar las ultimas 3 líneas que dicen "DFM Score", "{ ... }" y el salto de línea
+        dfm_score = output_lines[-1]
+        output_lines = output_lines[:-3]
+
+        return [{"titulo": line} for line in output_lines], [float(x) for x in dfm_score.split(";")]
 
     except FileNotFoundError:
         print("Error: No se encontró el programa `main` en la carpeta `frontend`.")
@@ -88,16 +113,18 @@ def buscar_videos(algoritmo):
         algoritmo = "Motley"
 
     if algoritmo == "Mock-KNN":
-        resultados = buscar_videos_mock(algoritmo, query, nombres, embeddings)
+        resultados, dfm = buscar_videos_mock(algoritmo, query, nombres, embeddings)
         resultados = [{"titulo": res["titulo"]} for res in resultados]
-        return jsonify({"algoritmo": algoritmo, "query": query, "resultados": resultados, "error": None}), 200
+        return jsonify({"algoritmo": algoritmo, "query": query, "resultados": resultados, "error": None, "dfm": dfm}), 200
     else:
-        resultados = buscar_videos_cpp(algoritmo, query)
+        resultados, dfm = buscar_videos_cpp(algoritmo, query)
+        print(resultados)
+        print(dfm)
     
     if not resultados:
-        return jsonify({"error": "No se encontraron resultados para la búsqueda"}), 404
+        return jsonify({"error": "No se encontraron resultados para la búsqueda", "dfm": dfm, "resultados": []}), 404
 
-    return jsonify({"algoritmo": algoritmo, "query": query, "resultados": resultados, "error": None}), 200
+    return jsonify({"algoritmo": algoritmo, "query": query, "resultados": resultados, "error": None, "dfm": dfm}), 200
 
 @app.route('/first_impression', methods=['GET'])
 def first_impression():
